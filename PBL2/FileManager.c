@@ -5,9 +5,38 @@ Surface bat PNG irudi bezala exportatzeko.
 Fitxategiaren izena eta direktorioa ezartzeko aukera WIP
 */
 int exportMap(SDL_Surface* surface) {
-    char* path = "images/export.png";
+    char path[128] = "images/export";
+    obtainpath(path);
     IMG_SavePNG(surface, path);
     return 0;
+}
+
+
+/*
+Surface-a exportatzean, aurretik exportatutako beste mapa bat ez borratzeko izen
+berria bilatzen du exportatutako mapa guztiak eskuragarri egoteko
+*/
+void obtainpath(char* path) {
+    char pathCopy[128], tmp[6];
+    int running = 1, i = 1;
+    FILE* fp;
+    strcpy(pathCopy, path);
+    strcat(pathCopy, ".png");
+
+    while (running) {
+        fp = fopen(pathCopy, "r");
+        if (fp != NULL) {
+            sprintf(tmp, "%d", i);
+            strcpy(pathCopy, path);
+            strcat(pathCopy, "_");
+            strcat(pathCopy, tmp);
+            strcat(pathCopy, ".png");
+            fclose(fp);
+            i++;
+        }
+        else running = 0;
+    }
+    strcpy(path, pathCopy);
 }
 
 /*
@@ -15,7 +44,7 @@ Irudi bat inportatzeko pantailara arrastratuaz.
 [1] Ebentoak begiratu ESC tekla sakatuaz irten edo fitxategia arrastratu arte.
 [2] Fitxategiaren helbidea lortutakoan surface batera bihurtu eta beharrezko memoriak askatu.
 */
-int importMap(SDL_Renderer* renderer, SDL_Surface** surface) {
+int importMap(SDL_Surface** surface) {
     char fileDir[256];
     int loaded = 0;
     SDL_Event e;
@@ -31,7 +60,8 @@ int importMap(SDL_Renderer* renderer, SDL_Surface** surface) {
                 if (fp) {
                     SDL_Surface* s = IMG_LoadPNG_RW(fp);
                     if (s) {
-                        if (*surface) SDL_free(*surface);
+                        SDL_Surface* lol = *surface;
+                        if (*surface) SDL_FreeSurface(lol);
                         *surface = s;
                         loaded = 1;
                     }

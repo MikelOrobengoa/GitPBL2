@@ -11,7 +11,7 @@ int mainMenu(SDL_Renderer* renderer, SDL_Surface** surface, int* clientState) {
             running = 0;
         }
         else if (KEYS[SDLK_i] || checkButton(btn_import)) {
-            if (importMap(renderer, surface)) *clientState = CLIENT_EDITOR;
+            if (importMap(surface)) *clientState = CLIENT_EDITOR;
         }
         else if (KEYS[SDLK_n] || checkButton(btn_newFile)) {
             *surface = SDL_CreateRGBSurface(0, WIDTH, HEIGHT, 32, NULL, NULL, NULL, NULL);

@@ -12,38 +12,24 @@ Editorearen funtzio nagusia.
 [3] Sagua menuan badago, bertako botoi desberdinak klikatu diren begiratu eta beharrezko funtzioak deitu edo kolorea aldatu
 */
 int editor(SDL_Surface** surface) {
-    static isSaved;
+    static int isSaved, costColor = 4;
     int changed = 0;
 
 
     //Color palette
+    
     SDL_Color
         red = { 255, 0, 0 },
         green = { 0, 255, 0 },
         blue = { 0, 0, 255 },
         magenta = { 255, 0, 255 },
-        cost4 = { 0, 0, 0 },
-        cost3 = { 51, 51, 51 },
-        cost2 = { 102, 102, 102 },
-        cost1 = { 153, 153, 153 },
-        cost0 = { 255, 255, 255 };
-
-    //TEMP keys
-    if (KEYS[SDLK_r]) color = red;
-    else if (KEYS[SDLK_g]) color = green;
-    else if (KEYS[SDLK_b]) color = blue;
-    else if (KEYS[SDLK_m]) color = magenta;
-    else if (KEYS[SDLK_4]) color = cost4;
-    else if (KEYS[SDLK_3]) color = cost3;
-    else if (KEYS[SDLK_2]) color = cost2;
-    else if (KEYS[SDLK_1]) color = cost1;
-    else if (KEYS[SDLK_0]) color = cost0;
-
-
-    if (!isSaved && KEYS[SDLK_f]) {
-        exportMap(*surface);
-        isSaved = 1;
-    }
+        costs[] = {
+            {.r = 255, .g = 255, .b = 255 },
+            {.r = 153, .g = 153, .b = 153 },
+            {.r = 102, .g = 102, .b = 102 },
+            {.r = 51, .g = 51, .b = 51 },
+            {.r = 0, .g = 0, .b = 0 }
+        };
     int x, y;
     SDL_GetMouseState(&x, &y);
     if (y >= MENU_HEIGHT) { //Canvas
@@ -55,7 +41,79 @@ int editor(SDL_Surface** surface) {
     }
     else { //Menu
         if (MOUSE_CLICK) {
+            SDL_Rect
+                btn_new = { 6, 3, 96, 26 },
+                btn_import = { 106, 3, 96, 26 },
+                btn_export = { 206, 3, 96, 26 },
+                btn_red = { 341, 3, 28, 26 },
+                btn_green = { 373, 3, 28, 26 },
+                btn_blue = { 405, 3, 28, 26 },
+                btn_minus = { 468, 3, 28, 26 },
+                btn_cost = { 500, 3, 28, 26 },
+                btn_plus = { 532, 3, 28, 26 },
+                btn_sim = { 600, 3, 96, 26 },
+                btn_help = { 734, 3, 28, 26 };
 
+            if (checkButton(btn_new)) {
+                SDL_Surface* s;
+                s = SDL_CreateRGBSurface(0, WIDTH, HEIGHT, 32, NULL, NULL, NULL, NULL);
+                if (!s) printf("Errorea fitxategi berria sortzean.\n");
+                else {
+                    SDL_FillRect(s, NULL, SDL_MapRGB((s)->format, 255, 255, 255));
+                    SDL_FreeSurface(*surface);
+                    *surface = s;
+                    isSaved = 0;
+                    changed = 1;
+                }
+            }
+            else if (checkButton(btn_import)) {
+                SDL_Surface* s = NULL;
+                importMap(&s);
+                if (!s) printf("Errorea fitxategia inportatzean.\n");
+                else {
+                    SDL_FreeSurface(*surface);
+                    *surface = s;
+                    isSaved = 0;
+                    changed = 1;
+                }
+            }
+            else if (checkButton(btn_export) && !isSaved) {
+                exportMap(*surface);
+                isSaved = 1;
+            }
+            else if (checkButton(btn_red)) {
+                color = red;
+            }
+            else if (checkButton(btn_green)) {
+                color = green;
+            }
+            else if (checkButton(btn_blue)) {
+                color = blue;
+            }
+            else if (checkButton(btn_minus)) {
+                if (costColor > 0) {
+                    costColor--;
+                }
+                printf("cost: %d\n", costColor);
+                color = costs[costColor];
+            }
+            else if (checkButton(btn_cost)) {
+                color = costs[costColor];
+            }
+            else if (checkButton(btn_plus)) {
+                if (costColor < 4) {
+                    costColor++;
+                }
+                printf("cost: %d\n", costColor);
+                color = costs[costColor];
+            }
+            else if (checkButton(btn_sim)) {
+                printf("HAHA NO SIM SIMP\n");
+            }
+            else if (checkButton(btn_help)) {
+                printf("HAHA NO HELP LUL\n");
+            }
+            MOUSE_CLICK = 0;
             //Colors
         }
     }

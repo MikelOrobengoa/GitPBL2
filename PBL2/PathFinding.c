@@ -3,26 +3,28 @@
 /*
 Algoritmoak erabiliko dituen nodoen (laukien) zerrenda .
 */
-node nodes[576];
+node nodes[24][24];
 /*
 Bidearen hasiera eta bukaerako nodoak zerrendako zein posiziotan dauden.
 */
-int startIndex = 0, endIndex = 0;
+int startIndex[] = { -1, -1 }, endIndex[] = { -1, -1 };
 
 /*
 Surface batean, lauki bakoitzaren lehen pixeleko kolorea begiratu eta horren arabera nodoari beharrezko balioa ezarri.
 */
 int loadMap(SDL_Surface* surface) {
     int success = 1;
-    for (int i = 0; i < 576; i++) {
-        nodes[i].block = 0;
-        nodes[i].cost = 0;
-        nodes[i].end = 0;
-        nodes[i].start = 0;
+    for (int i = 0; i < Y_TILES; i++) {
+        for (int j = 0; X_TILES < 24; j++) {
+            nodes[i][j].block = 0;
+            nodes[i][j].cost = 0;
+            nodes[i][j].end = 0;
+            nodes[i][j].start = 0;
+        }
     }
 
-	for (int y = 0; y < 24; y++) {
-		for (int x = 0; x < 24; x++) {
+	for (int y = 0; y < Y_TILES; y++) {
+		for (int x = 0; x < X_TILES; x++) {
             success = checkColor(getPixelColor(surface, x, y), x, y);
             if (!success) break;
 		}
@@ -37,18 +39,20 @@ Kolorearen arabera (x, y) posizioko nodoari beharrezko ezaugarriak ezarri.
 int checkColor(SDL_Color color, int x, int y) {
     int success = 1;
     if (color.r == 0 && color.g == 0 && color.b == 255) {
-        nodes[y * 24 + x].start = 1;
-        endIndex = y * 24 + x;
+        nodes[x][y].start = 1;
+        endIndex[0] = x;
+        endIndex[1] = y;
     }
     else if (color.r == 0 && color.g == 255 && color.b == 0) {
-        nodes[y * 24 + x].end = 1;
-        startIndex = y * 24 + x;
+        nodes[x][y].end = 1;
+        startIndex[0] = x;
+        startIndex[1] = y;
     }
-    else if (color.r == 153 && color.g == 153 && color.b == 153) nodes[y * 24 + x].cost = 1;
-    else if (color.r == 102 && color.g == 102 && color.b == 102) nodes[y * 24 + x].cost = 2;
-    else if (color.r == 51 && color.g == 51 && color.b == 51) nodes[y * 24 + x].cost = 3;
-    else if (color.r == 0 && color.g == 0 && color.b == 0) nodes[y * 24 + x].cost = 4;
-    else if (color.r == 255 && color.g == 0 && color.b == 0) nodes[y * 24 + x].block = 1;
+    else if (color.r == 153 && color.g == 153 && color.b == 153) nodes[x][y].cost = 1;
+    else if (color.r == 102 && color.g == 102 && color.b == 102) nodes[x][y].cost = 2;
+    else if (color.r == 51 && color.g == 51 && color.b == 51) nodes[x][y].cost = 3;
+    else if (color.r == 0 && color.g == 0 && color.b == 0) nodes[x][y].cost = 4;
+    else if (color.r == 255 && color.g == 0 && color.b == 0) nodes[x][y].block = 1;
     else if (color.r != 255 && color.g != 255 && color.b != 255) success = 0;
 
     return success;

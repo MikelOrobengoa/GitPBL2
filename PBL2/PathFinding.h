@@ -56,7 +56,8 @@ int loadMenu(SDL_Surface** surface);
 
 //Files
 int exportMap(SDL_Surface* surface);
-int importMap(SDL_Renderer* renderer, SDL_Surface** surface);
+void obtainpath(char* path);
+int importMap(SDL_Surface** surface);
 
 int loadMap(SDL_Surface* surface);
 int checkColor(SDL_Color color, int x, int y);
