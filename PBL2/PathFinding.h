@@ -71,6 +71,8 @@ int editor(SDL_Surface** surface);
 void renderGrid(SDL_Renderer* renderer);
 int paintTile(SDL_Surface* surface, SDL_Color color);
 int renderTilePreview(SDL_Renderer* renderer);
+int loadEditorMenu(SDL_Surface** surface);
+void renderEditor(SDL_Renderer* renderer, SDL_Surface* fileTexture);
 
 
 

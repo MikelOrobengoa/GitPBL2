@@ -15,6 +15,7 @@ int editor(SDL_Surface** surface) {
     static isSaved;
     int changed = 0;
 
+
     //Color palette
     SDL_Color
         red = { 255, 0, 0 },
@@ -116,4 +117,37 @@ void getTilePos(int* x, int* y) {
     *x -= *x % TILESIZE;
     *y -= MENU_HEIGHT;
     *y -= *y % TILESIZE;
+}
+
+void renderEditor(SDL_Renderer* renderer, SDL_Surface* fileTexture) {
+    static SDL_Texture* menuBarTexture = NULL;
+    if (!menuBarTexture) {
+        SDL_Surface* menuBarSurface = NULL;
+        loadEditorMenu(&menuBarSurface);
+        if (menuBarSurface) menuBarTexture = SDL_CreateTextureFromSurface(renderer, menuBarSurface);
+        SDL_FreeSurface(menuBarSurface);
+    }
+
+    SDL_Rect screen = { 0, MENU_HEIGHT, WIDTH, HEIGHT};
+    SDL_Rect menuBar = { 0, 0, WIDTH, MENU_HEIGHT };
+    SDL_RenderCopy(renderer, fileTexture, NULL, &screen);
+    renderGrid(renderer);
+    renderTilePreview(renderer);
+    SDL_RenderCopy(renderer, menuBarTexture, NULL, &menuBar);
+}
+
+int loadEditorMenu(SDL_Surface** surface) {
+    int loaded = 0;
+    SDL_RWops* fp = SDL_RWFromFile("images/menuBar.png", "rb");
+    if (fp) {
+        SDL_Surface* s = IMG_LoadPNG_RW(fp);
+        if (s) {
+            if (*surface) SDL_free(*surface);
+            *surface = s;
+            loaded = 1;
+        }
+        SDL_RWclose(fp);
+    }
+
+    return loaded;
 }

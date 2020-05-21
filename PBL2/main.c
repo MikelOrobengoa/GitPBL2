@@ -65,10 +65,7 @@ int main(int argc, char* argv[]){
                 SDL_DestroyTexture(fileTexture);
                 fileTexture = SDL_CreateTextureFromSurface(renderer, fileSurface);
             }
-            SDL_Rect screen = {0, MENU_HEIGHT, WIDTH, HEIGHT };
-            SDL_RenderCopy(renderer, fileTexture, NULL, &screen);
-            renderGrid(renderer);
-            renderTilePreview(renderer);
+            renderEditor(renderer, fileTexture);
             break;
         }
         SDL_RenderPresent(renderer);
