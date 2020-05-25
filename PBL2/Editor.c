@@ -35,6 +35,7 @@ int editor(SDL_Surface** surface) {
     if (y >= MENU_HEIGHT) { //Canvas
         if (MOUSE_CLICK) {
             paintTile(*surface, color);
+            updateMap(color);
             isSaved = 0;
             changed = 1;
         }

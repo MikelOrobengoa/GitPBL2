@@ -44,7 +44,9 @@ Biderik motzena topatzeko algoritmoak erabiliko dituen nodoen informazioa gordet
 */
 typedef struct NODE {
 	double f, g, h;
-	int cost, block, start, end;
+	int cost, block, neighboursCount, x, y;
+	struct NODE* neighbours[8];
+	struct NODE* parent;
 } node;
 
 
@@ -59,10 +61,19 @@ int exportMap(SDL_Surface* surface);
 void obtainpath(char* path);
 int importMap(SDL_Surface** surface);
 
+
+//Pathfinding
 int loadMap(SDL_Surface* surface);
 int checkColor(SDL_Color color, int x, int y);
 SDL_Color getPixelColor(SDL_Surface* surface, int x, int y);
-
+void updateMap(SDL_Color color);
+void initNodes();
+double calculateHValue(int ogX, int ogY, int destX, int destY);
+int containsNode(node* element, int kop, node** list);
+int aStar();
+void removeNode(node* element, int* kop, node** list);
+void retracePath(node* start, node* end);
+void printfPath(SDL_Renderer* renderer);
 //Events
 void eventHandler(SDL_Event e);
 

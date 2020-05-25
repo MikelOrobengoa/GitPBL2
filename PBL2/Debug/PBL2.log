@@ -1,27 +1,3 @@
-﻿  Editor.c
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\Editor.c(59,68): warning C4047: 'function': 'Uint32' differs in levels of indirection from 'void *'
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\Editor.c(59,68): warning C4024: 'SDL_CreateRGBSurface': different types for formal and actual parameter 5
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\Editor.c(59,74): warning C4047: 'function': 'Uint32' differs in levels of indirection from 'void *'
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\Editor.c(59,74): warning C4024: 'SDL_CreateRGBSurface': different types for formal and actual parameter 6
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\Editor.c(59,80): warning C4047: 'function': 'Uint32' differs in levels of indirection from 'void *'
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\Editor.c(59,80): warning C4024: 'SDL_CreateRGBSurface': different types for formal and actual parameter 7
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\Editor.c(59,86): warning C4047: 'function': 'Uint32' differs in levels of indirection from 'void *'
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\Editor.c(59,86): warning C4024: 'SDL_CreateRGBSurface': different types for formal and actual parameter 8
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\Editor.c(192,41): warning C4133: 'function': incompatible types - from 'SDL_Surface *' to 'SDL_Texture *'
-  EventHandler.c
-  FileManager.c
-  main.c
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\main.c(68,47): warning C4133: 'function': incompatible types - from 'SDL_Texture *' to 'SDL_Surface *'
-  MenuManager.c
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\MenuManager.c(17,71): warning C4047: 'function': 'Uint32' differs in levels of indirection from 'void *'
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\MenuManager.c(17,71): warning C4024: 'SDL_CreateRGBSurface': different types for formal and actual parameter 5
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\MenuManager.c(17,77): warning C4047: 'function': 'Uint32' differs in levels of indirection from 'void *'
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\MenuManager.c(17,77): warning C4024: 'SDL_CreateRGBSurface': different types for formal and actual parameter 6
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\MenuManager.c(17,83): warning C4047: 'function': 'Uint32' differs in levels of indirection from 'void *'
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\MenuManager.c(17,83): warning C4024: 'SDL_CreateRGBSurface': different types for formal and actual parameter 7
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\MenuManager.c(17,89): warning C4047: 'function': 'Uint32' differs in levels of indirection from 'void *'
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\MenuManager.c(17,89): warning C4024: 'SDL_CreateRGBSurface': different types for formal and actual parameter 8
-  PathFinding.c
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\PathFinding.c(66,1): warning C4133: 'initializing': incompatible types - from 'Uint8 *' to 'Uint32 *'
-  Generating Code...
+﻿  PathFinding.c
+D:\Docs\Uni\2\PBL2\PBL2\PBL2\PathFinding.c(60,1): warning C4133: 'initializing': incompatible types - from 'Uint8 *' to 'Uint32 *'
   PBL2.vcxproj -> D:\Docs\Uni\2\PBL2\PBL2\Debug\PBL2.exe

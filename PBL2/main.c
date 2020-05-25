@@ -18,7 +18,7 @@ int main(int argc, char* argv[]){
     SDL_Texture* fileTexture = NULL, * menuTexture = NULL;
 
     int running = init(&win, &renderer);
-
+    static int working = 0;
     if (running) {
         //Start exec
         for (int i = 0; i < 322; i++) *(KEYS + i) = 0;
@@ -66,7 +66,18 @@ int main(int argc, char* argv[]){
                 fileTexture = SDL_CreateTextureFromSurface(renderer, fileSurface);
             }
             renderEditor(renderer, fileTexture);
+            if (KEYS[SDLK_s]) clientState = CLIENT_SIM;
             break;
+        case CLIENT_SIM:
+            if (!working) {
+                working = 1;
+                aStar();
+                printf("printing path");
+                printfPath(renderer);
+                
+                //clientState = CLIENT_EDITOR;
+            }
+            
         }
         SDL_RenderPresent(renderer);
     }
@@ -92,7 +103,7 @@ int init(SDL_Window** win, SDL_Renderer** renderer) {
     }
     else {
         //Zabaldu leihoa
-        *win = SDL_CreateWindow("Ancient Garden", 500, 60, WIDTH, HEIGHT + MENU_HEIGHT, 0);
+        *win = SDL_CreateWindow("Regadier", 500, 60, WIDTH, HEIGHT + MENU_HEIGHT, 0);
         if (*win == NULL) {
             printf("Ez da leihoa sortu. SDL_Error: %s\n", SDL_GetError());
             success = 0;

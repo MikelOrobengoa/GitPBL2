@@ -11,7 +11,6 @@ int exportMap(SDL_Surface* surface) {
     return 0;
 }
 
-
 /*
 Surface-a exportatzean, aurretik exportatutako beste mapa bat ez borratzeko izen
 berria bilatzen du exportatutako mapa guztiak eskuragarri egoteko
