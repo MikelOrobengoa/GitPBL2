@@ -44,9 +44,7 @@ Biderik motzena topatzeko algoritmoak erabiliko dituen nodoen informazioa gordet
 */
 typedef struct NODE {
 	double f, g, h;
-	int cost, block, neighboursCount, x, y;
-	struct NODE* neighbours[8];
-	struct NODE* parent;
+	int cost, block, start, end;
 } node;
 
 
@@ -57,34 +55,25 @@ int checkButton(SDL_Rect btn);
 int loadMenu(SDL_Surface** surface);
 
 //Files
-int exportMap(SDL_Surface* surface);
-void obtainpath(char* path);
-int importMap(SDL_Surface** surface);
+int exportMap(SDL_Surface* surface, SDL_Renderer* renderer);
+void moveright(int start, char* path);
+void showpath(char* path, SDL_Renderer* renderer, int position_path);
+int formatuegokia(char* path);
+int importMap(SDL_Renderer* renderer, SDL_Surface** surface);
 
-
-//Pathfinding
 int loadMap(SDL_Surface* surface);
 int checkColor(SDL_Color color, int x, int y);
 SDL_Color getPixelColor(SDL_Surface* surface, int x, int y);
-void updateMap(SDL_Color color);
-void initNodes();
-double calculateHValue(int ogX, int ogY, int destX, int destY);
-int containsNode(node* element, int kop, node** list);
-int aStar();
-void removeNode(node* element, int* kop, node** list);
-void retracePath(node* start, node* end);
-void printfPath(SDL_Renderer* renderer);
+
 //Events
 void eventHandler(SDL_Event e);
 
 //Editor
 void getTilePos(int* x, int* y);
-int editor(SDL_Surface** surface);
+int editor(SDL_Surface** surface, SDL_Renderer* renderer);
 void renderGrid(SDL_Renderer* renderer);
 int paintTile(SDL_Surface* surface, SDL_Color color);
 int renderTilePreview(SDL_Renderer* renderer);
-int loadEditorMenu(SDL_Surface** surface);
-void renderEditor(SDL_Renderer* renderer, SDL_Surface* fileTexture);
 
 
 
