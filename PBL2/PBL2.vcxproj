@@ -90,7 +90,7 @@
       <AdditionalIncludeDirectories>../SDL2_ttf\include;../SDL2_image\include;..\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\SDL2\lib\x86;..\SDL2_image\lib\x86;..\SDL2_ttf\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -150,6 +150,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PathFinding.h" />
+    <ClInclude Include="resource1.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="PBL21.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="images\regadier.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
