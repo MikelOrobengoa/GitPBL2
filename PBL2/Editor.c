@@ -79,7 +79,20 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer) {
                 }
             }
             else if (checkButton(btn_export) && !isSaved) {
-               isSaved = exportMap(*surface, renderer);
+                switch (exportMap(*surface, renderer)) {
+                case -1:
+                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Ezin izan da exportatu fitxategia\n-Ez da aurkitu direktorioa", NULL);
+                    break;
+                case 0:
+                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Ezin izan da exportatu fitxategia", NULL);
+                    break;
+                case 1:
+                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "SAVE", "Exportatu da png fitxategia", NULL);
+                    break;
+                case 2:
+                    changed = 2;
+                    break;
+                }
             }
             else if (checkButton(btn_red)) {
                 color = red;
