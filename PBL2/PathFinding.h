@@ -57,8 +57,10 @@ int checkButton(SDL_Rect btn);
 int loadMenu(SDL_Surface** surface);
 
 //Files
-int exportMap(SDL_Surface* surface);
-void obtainpath(char* path);
+int exportMap(SDL_Surface* surface, SDL_Renderer* renderer);
+void moveright(int start, char* path);
+void showpath(char* path, SDL_Renderer* renderer, int position_path);
+int formatuegokia(char* path);
 int importMap(SDL_Surface** surface);
 
 
@@ -79,7 +81,7 @@ void eventHandler(SDL_Event e);
 
 //Editor
 void getTilePos(int* x, int* y);
-int editor(SDL_Surface** surface);
+int editor(SDL_Surface** surface, SDL_Renderer* renderer);
 void renderGrid(SDL_Renderer* renderer);
 int paintTile(SDL_Surface* surface, SDL_Color color);
 int renderTilePreview(SDL_Renderer* renderer);

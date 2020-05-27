@@ -11,7 +11,7 @@ Editorearen funtzio nagusia.
 [2] Sagua menutik behera badago, 'canvas' barruan, klik egitean lauza margotu.
 [3] Sagua menuan badago, bertako botoi desberdinak klikatu diren begiratu eta beharrezko funtzioak deitu edo kolorea aldatu
 */
-int editor(SDL_Surface** surface) {
+int editor(SDL_Surface** surface, SDL_Renderer* renderer) {
     static int isSaved, costColor = 4;
     int changed = 0;
 
@@ -79,8 +79,7 @@ int editor(SDL_Surface** surface) {
                 }
             }
             else if (checkButton(btn_export) && !isSaved) {
-                exportMap(*surface);
-                isSaved = 1;
+               isSaved = exportMap(*surface, renderer);
             }
             else if (checkButton(btn_red)) {
                 color = red;
