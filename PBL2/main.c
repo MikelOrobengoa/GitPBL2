@@ -70,11 +70,12 @@ int main(int argc, char* argv[]){
             break;
         case CLIENT_SIM:
             if (!working) {
-                working = 1;
-                aStar();
+                initNodes();
+                loadMap(fileSurface);
+                aStar(renderer);
                 printf("printing path");
                 printfPath(renderer);
-                
+                working = 1;
                 //clientState = CLIENT_EDITOR;
             }
             

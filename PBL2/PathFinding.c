@@ -1,4 +1,6 @@
 #include "PathFinding.h"
+#include <math.h>
+#include <windows.h>
 
 /*
 Algoritmoak erabiliko dituen nodoen (laukien) zerrenda edo matrizeak.
@@ -34,6 +36,11 @@ Kolorearen arabera (x, y) posizioko nodoari beharrezko ezaugarriak ezarri.
 */
 int checkColor(SDL_Color color, int x, int y) {
     int success = 1;
+
+    nodes[x][y].block = 0;
+    nodes[x][y].cost = 0;
+    nodes[x][y].id = x + y * Y_TILES;
+
     if (color.r == 0 && color.g == 0 && color.b == 255) {
         startNode = &nodes[x][y];
         open[0] = startNode;
@@ -73,9 +80,6 @@ void updateMap(SDL_Color color) {
 void initNodes() {
     for (int j = 0; j < Y_TILES; j++) {
         for (int i = 0; i < X_TILES; i++) {
-            nodes[j][j].block = 0;
-            nodes[i][j].cost = 0;
-            nodes[i][j].neighboursCount = 0;
             nodes[i][j].x = i;
             nodes[i][j].y = j;
             
@@ -87,7 +91,7 @@ void initNodes() {
                 nodes[i][j].neighbours[nodes[i][j].neighboursCount] = &nodes[i][j - 1];
                     nodes[i][j].neighboursCount++;
             }
-            if (i + 1 <= X_TILES && j - 1 >= 0) {
+            if (i + 1 < X_TILES && j - 1 >= 0) {
                 nodes[i][j].neighbours[nodes[i][j].neighboursCount] = &nodes[i +1 ][j - 1];
                     nodes[i][j].neighboursCount++;
             }
@@ -95,19 +99,19 @@ void initNodes() {
                 nodes[i][j].neighbours[nodes[i][j].neighboursCount] = &nodes[i - 1][j];
                     nodes[i][j].neighboursCount++;
             }
-            if (i + 1 <= X_TILES) {
+            if (i + 1 < X_TILES) {
                 nodes[i][j].neighbours[nodes[i][j].neighboursCount] = &nodes[i + 1][j];
                 nodes[i][j].neighboursCount++;
             }
-            if (i - 1 >= 0 && j + 1 <= Y_TILES) {
+            if (i - 1 >= 0 && j + 1 < Y_TILES) {
                 nodes[i][j].neighbours[nodes[i][j].neighboursCount] = &nodes[i - 1][j + 1];
                 nodes[i][j].neighboursCount++;
             }
-            if (j + 1 <= Y_TILES) {
+            if (j + 1 < Y_TILES) {
                 nodes[i][j].neighbours[nodes[i][j].neighboursCount] = &nodes[i][j + 1];
                 nodes[i][j].neighboursCount++;
             }
-            if (i + 1 <= X_TILES && j + 1 <= Y_TILES) {
+            if (i + 1 < X_TILES && j + 1 < Y_TILES) {
                 nodes[i][j].neighbours[nodes[i][j].neighboursCount] = &nodes[i + 1][j + 1];
                 nodes[i][j].neighboursCount++;
             }
@@ -116,42 +120,73 @@ void initNodes() {
 }
 
 double calculateHValue(int ogX, int ogY, int destX, int destY) {
-    getTilePos(&ogX, &ogY);
-    getTilePos(&destX, &destY);
-    return ((double) sqrt(((double) ogX / TILESIZE - destX / TILESIZE) * ((double) ogX / TILESIZE - destX / TILESIZE)
-        + ((double) ogY / TILESIZE - destY / TILESIZE) * ((double) ogY / TILESIZE - destY / TILESIZE)));
+    return sqrt(pow((double)ogX - destX, 2) + pow((double)ogY - destY, 2));
+    //double d1, d2;
+    //d1 = abs(ogX - destX);
+    //d2 = abs(ogY - destY);
+    //if (d1 > d2) return d1;
+    //else return d2;
+
+    //return ((double) sqrt(((double) ogX - destX) * ((double) ogX - destX)
+    //    + ((double) ogY - destY) * ((double) ogY - destY)));
 }
 
-int aStar() {
-    initNodes();
-    while (openKop > 0) {
-        printf("openKop: %d\n", openKop);
-        int lowestIndex = openKop - 1;
-        node* current = open[lowestIndex];
-
-        for (int i = openKop - 2; i >= 0; i--) {
-            if (open[i]->f < open[lowestIndex]->f) lowestIndex = i;
+int aStar(SDL_Renderer* renderer) {
+    /*for (int i = 0; i < 24; i++) {
+        for (int j = 0; j < 24; j++) {
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            SDL_RenderClear(renderer, NULL);
+            SDL_Rect r = { nodes[i][j].x * TILESIZE,  nodes[i][j].y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
+            SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+            SDL_RenderFillRect(renderer, &r);
+            for (int n = 0; n < nodes[i][j].neighboursCount; n++) {
+                SDL_Rect r = { nodes[i][j].neighbours[n]->x * TILESIZE, nodes[i][j].neighbours[n]->y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
+                SDL_SetRenderDrawColor(renderer, 196, 64, 64, 255);
+                SDL_RenderFillRect(renderer, &r);
+                SDL_RenderPresent(renderer);
+            }
+                Sleep(1000);
         }
-        current = open[lowestIndex];
-        printf("current: (%d, %d)\n", current->x, current->y);
+    }*/
+    
+    SDL_RenderPresent(renderer);
+    for (int i = 0; i < 24; i++) printf("%d", nodes[i][3].block);
+    openKop = 1;
+    open[0] = startNode;
+    closedKop = 0;
+    while (openKop > 0) {
+        Sleep(10);
+        int lowestIndex = 0;
 
-        removeNode(current, &openKop, open);
+        for (int i = 1; i < openKop; i++) {
+            if (open[i]->f <= open[lowestIndex]->f && open[i]->h <= open[lowestIndex]->h) lowestIndex = i;
+        }
+        node* current = open[lowestIndex];
+        //printf("current: (%d, %d)\n", current->x, current->y);
+
         closed[closedKop] = current;
         closedKop++;
+        removeNode(current, &openKop, open);
 
-        if (current->x == endNode->x && current->y == endNode->y) {
+        if (current->id == endNode->id) {
+            //for (int i = 0; i < openKop; i++) printf("%d, %d, %d", open[i]->x, open[i]->y, open[i]->id);
+            printf("creo que ya he terminado");
             retracePath(startNode, endNode);
             return 1;
         }
 
-        for (int i = current->neighboursCount - 1; i >= 0; i--) {
+        for (int i = 0; i < current->neighboursCount; i++) {
             node* neighbour = current->neighbours[i];
-            if (neighbour->block || containsNode(neighbour, closedKop, closed)) continue;
+            if (neighbour->block || containsNode(neighbour, closedKop, closed))
+                continue;
             else {
-                double newNeighbourCost = current->f + calculateHValue(current->x, current->y, neighbour->x, neighbour->y);
-                if (newNeighbourCost < neighbour->g || !containsNode(neighbour, openKop, open)) {
+                double newNeighbourCost = current->g + calculateHValue(current->x, current->y, neighbour->x, neighbour->y) + neighbour->cost;
+                //double newNeighbourCost = current->g + neighbour->cost + 1;
+                if (newNeighbourCost <= neighbour->g ||!containsNode(neighbour, openKop, open)) {
+                    if (newNeighbourCost <= neighbour->g) printf("ha gorim");
                     neighbour->g = newNeighbourCost;
                     neighbour->h = calculateHValue(neighbour->x, neighbour->y, endNode->x, endNode->y);
+                    neighbour->f = neighbour->g + neighbour->h;
                     neighbour->parent = current;
 
                     if (!containsNode(neighbour, openKop, open)) {
@@ -161,6 +196,18 @@ int aStar() {
                 }
             }
         }
+
+        for (int i = 0; i < openKop; i++) {
+            SDL_Rect r = { open[i]->x * TILESIZE, open[i]->y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
+            SDL_SetRenderDrawColor(renderer, 255, 255, 0, 32);
+            SDL_RenderFillRect(renderer, &r);
+        }
+        for (int i = 0; i < closedKop; i++) {
+            SDL_Rect r = { closed[i]->x * TILESIZE, closed[i]->y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
+            SDL_SetRenderDrawColor(renderer, 196, 64, 64, 32);
+            SDL_RenderFillRect(renderer, &r);
+        }
+        SDL_RenderPresent(renderer);
     }
 
     return 0;
@@ -169,26 +216,25 @@ int aStar() {
 int containsNode(node* element, int kop, node** list) {
     int found = 0, i = 0;
     while (!found && i < kop){
-        if (element->x == list[i]->x && element->y == list[i]->y) found = 1;
-            i++;
+        if (element->id == list[i]->id) found = 1;
+        i++;
     }
     return found;
 }
 
 void removeNode(node* element, int* kop, node** list) {
     int i = 0;
-    while (element->x != list[i]->x && element->y != list[i]->y && i < *kop) i++;
-    for (i; i < *kop - 1; i++){
+    while (i < *kop && element->id == list[i]->id) i++;
+    for (i = i - 1; i < *kop; i++) {
         list[i] = list[i + 1];
     }
-    *kop = *kop - 1;
+    *kop -= 1;
 }
 
 void retracePath(node* start, node* end) {
     int i = 0;
     node* current = end;
-    while (current->x != start->x || current->y != start->y) {
-        //path = (node*)malloc(sizeof(node*) * i);
+    while (current->id != start->id) {
         *(path + i) = current;
         i++;
         current = current->parent;
@@ -201,7 +247,7 @@ void printfPath(SDL_Renderer* renderer) {
         SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
         SDL_Rect r = { path[i]->x * TILESIZE, path[i]->y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
         SDL_RenderFillRect(renderer, &r);
-        printf("%d, (%d, %d)\n", i, path[i]->x, path[i]->y);
+        printf("%d, (%d, %d) g: %f, h: %f f: %f\n", i, path[i]->x, path[i]->y, path[i]->g, path[i]->h, path[i]->f);
 
     }
 
