@@ -12,7 +12,7 @@ Editorearen funtzio nagusia.
 [3] Sagua menuan badago, bertako botoi desberdinak klikatu diren begiratu eta beharrezko funtzioak deitu edo kolorea aldatu
 */
 int editor(SDL_Surface** surface, SDL_Renderer* renderer) {
-    static int isSaved, costColor = 4;
+    static int costColor = 4;
     int changed = 0;
 
 
@@ -36,7 +36,6 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer) {
         if (MOUSE_CLICK) {
             paintTile(*surface, color);
             updateMap(color);
-            isSaved = 0;
             changed = 1;
         }
     }
@@ -63,7 +62,6 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer) {
                     SDL_FillRect(s, NULL, SDL_MapRGB((s)->format, 255, 255, 255));
                     SDL_FreeSurface(*surface);
                     *surface = s;
-                    isSaved = 0;
                     changed = 1;
                 }
             }
@@ -74,12 +72,24 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer) {
                 else {
                     SDL_FreeSurface(*surface);
                     *surface = s;
-                    isSaved = 0;
                     changed = 1;
                 }
             }
-            else if (checkButton(btn_export) && !isSaved) {
-               isSaved = exportMap(*surface, renderer);
+            else if (checkButton(btn_export)) {
+                switch (exportMap(*surface, renderer)) {
+                case -1:
+                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Ezin izan da exportatu fitxategia\n-Ez da aurkitu direktorioa", NULL);
+                    break;
+                case 0:
+                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Ezin izan da exportatu fitxategia\n-Formatu ez egokia, zihurtatu .png formatuan exportatzen dela", NULL);
+                    break;
+                case 1:
+                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "SAVE", "Exportatu da png fitxategia", NULL);
+                    break;
+                case 2:
+                    changed = 2;
+                    break;
+                }
             }
             else if (checkButton(btn_red)) {
                 color = red;
