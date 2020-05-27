@@ -83,9 +83,13 @@ int exportMap(SDL_Surface* surface, SDL_Renderer* renderer) {
 		}
 	}
 	SDL_StopTextInput();
-	if (gorde && formatuegokia(path)) {
-		gorde = IMG_SavePNG(surface, path);
-		if (gorde == 0)gorde = 1;
+	if (gorde) {
+		int formatua = formatuegokia(path);
+		if (formatua) {
+			gorde = IMG_SavePNG(surface, path);
+			if (gorde == 0)gorde = 1;
+		}
+		else gorde = 0;
 	}
 	else gorde = 2;
 

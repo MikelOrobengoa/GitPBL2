@@ -84,7 +84,7 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer) {
                     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Ezin izan da exportatu fitxategia\n-Ez da aurkitu direktorioa", NULL);
                     break;
                 case 0:
-                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Ezin izan da exportatu fitxategia", NULL);
+                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Ezin izan da exportatu fitxategia\n-Formatu ez egokia, zihurtatu .png formatuan exportatzen dela", NULL);
                     break;
                 case 1:
                     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "SAVE", "Exportatu da png fitxategia", NULL);
