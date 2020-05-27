@@ -9,7 +9,11 @@ int exportMap(SDL_Surface* surface, SDL_Renderer* renderer) {
 	int gorde = 1, position_path = 0;
 	SDL_Rect rect = { 200, HEIGHT / 2 - 50, WIDTH - 400, 50 };
 	SDL_bool done = SDL_FALSE;
-	showpath(path, renderer, position_path);
+	SDL_Texture* pathMessage = NULL, * pathTitle;
+
+	pathTitle = paintbackground(renderer);
+	pathMessage = showpath(path, renderer, position_path, pathMessage);
+
 
 	SDL_StartTextInput();
 	SDL_SetTextInputRect(&rect);
@@ -33,7 +37,7 @@ int exportMap(SDL_Surface* surface, SDL_Renderer* renderer) {
 					path[position_path] = tmp[0];
 					position_path++;
 				}
-				showpath(path, renderer, position_path);
+				pathMessage = showpath(path, renderer, position_path, pathMessage);
 				break;
 			case SDL_KEYDOWN:
 				if (event.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL) {
@@ -73,20 +77,23 @@ int exportMap(SDL_Surface* surface, SDL_Renderer* renderer) {
 				else if (event.key.keysym.sym == SDLK_RETURN) {
 					done = SDL_TRUE;
 				}
-				showpath(path, renderer, position_path);
+				pathMessage = showpath(path, renderer, position_path, pathMessage);
 				break;
 			}
 		}
 	}
 	SDL_StopTextInput();
 	if (gorde && formatuegokia(path)) {
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "SAVE", "Exportatu da png fitxategia", NULL);
-		IMG_SavePNG(surface, path);
+		gorde = IMG_SavePNG(surface, path);
+		if(gorde == 1)SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "SAVE", "Exportatu da png fitxategia", NULL);
+		else SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Ezin izan da exportatu fitxategia\n-Ez da aurkitu direktorioa", NULL);
 	}
 	else {
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Ezin izan da exportatu fitxategia", NULL);
 		gorde = 0;
 	}
+	SDL_DestroyTexture(pathTitle);
+	SDL_DestroyTexture(pathMessage);
 
 	return gorde;
 }
@@ -100,7 +107,7 @@ void moveright(int start, char* path) {
 	}
 }
 
-void showpath(char* path, SDL_Renderer* renderer, int position_path) {
+SDL_Texture* showpath(char* path, SDL_Renderer* renderer, int position_path, SDL_Texture* Message) {
 	char tmp[128];
 	strcpy(tmp, path);
 
@@ -110,7 +117,7 @@ void showpath(char* path, SDL_Renderer* renderer, int position_path) {
 
 	int w, h, i = 0, moved = 0;
 	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Verdana, tmp, Black);
-	SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+	Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
 	SDL_QueryTexture(Message, NULL, NULL, &w, &h);
 	while (w > WIDTH - 404) {
 		if (position_path > i) {
@@ -137,8 +144,8 @@ void showpath(char* path, SDL_Renderer* renderer, int position_path) {
 		SDL_Surface* surfaceTMP = TTF_RenderText_Solid(Verdana, tmp2, Black);
 		SDL_Texture* MessageTMP = SDL_CreateTextureFromSurface(renderer, surfaceTMP);
 		SDL_QueryTexture(MessageTMP, NULL, NULL, &wTMP, &h);
-		SDL_DestroyTexture(MessageTMP);
 		SDL_FreeSurface(surfaceTMP);
+		SDL_DestroyTexture(MessageTMP);
 		ptrPos = wTMP + 201;
 	}
 
@@ -157,6 +164,8 @@ void showpath(char* path, SDL_Renderer* renderer, int position_path) {
 
 	TTF_CloseFont(Verdana);
 	SDL_FreeSurface(surfaceMessage);
+
+	return Message;
 }
 
 int formatuegokia(char* path) {
@@ -164,6 +173,27 @@ int formatuegokia(char* path) {
 		return 1;
 	}
 	else return 0;
+}
+
+SDL_Texture* paintbackground(SDL_Renderer* renderer) {
+	SDL_Rect background = { 0, 0, 768, 768 };
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 100);
+	SDL_RenderFillRect(renderer, &background);
+
+	TTF_Init();
+	TTF_Font* Verdana = TTF_OpenFont("verdana.ttf", 24);
+	SDL_Color Black = { 0, 0, 0, 255 };
+	int w, h;
+	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Verdana, "Sartu direktorioa eta izena:", Black);
+	SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+	SDL_QueryTexture(Message, NULL, NULL, &w, &h);
+	SDL_Rect Message_rect = { 202, 180 - h, w, h };
+	SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+	SDL_RenderPresent(renderer);
+	TTF_Quit();
+
+	SDL_FreeSurface(surfaceMessage);
+	return Message;
 }
 
 /*
