@@ -89,8 +89,6 @@ int main(int argc, char* argv[]){
         }
         SDL_RenderPresent(renderer);
     }
-
-
 	return 0;
 }
 
