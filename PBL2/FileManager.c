@@ -85,7 +85,7 @@ int exportMap(SDL_Surface* surface, SDL_Renderer* renderer) {
 	SDL_StopTextInput();
 	if (gorde && formatuegokia(path)) {
 		gorde = IMG_SavePNG(surface, path);
-		if(gorde == 1)SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "SAVE", "Exportatu da png fitxategia", NULL);
+		if(gorde == 0)SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "SAVE", "Exportatu da png fitxategia", NULL);
 		else SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Ezin izan da exportatu fitxategia\n-Ez da aurkitu direktorioa", NULL);
 	}
 	else {
@@ -177,14 +177,14 @@ int formatuegokia(char* path) {
 
 SDL_Texture* paintbackground(SDL_Renderer* renderer) {
 	SDL_Rect background = { 0, 0, 768, 768 };
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 100);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 150);
 	SDL_RenderFillRect(renderer, &background);
 
 	TTF_Init();
-	TTF_Font* Verdana = TTF_OpenFont("verdana.ttf", 24);
-	SDL_Color Black = { 0, 0, 0, 255 };
+	TTF_Font* Verdana = TTF_OpenFont("verdanab.ttf", 24);
+	SDL_Color White = { 255, 255, 255, 255 };
 	int w, h;
-	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Verdana, "Sartu direktorioa eta izena:", Black);
+	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Verdana, "Sartu direktorioa eta izena:", White);
 	SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
 	SDL_QueryTexture(Message, NULL, NULL, &w, &h);
 	SDL_Rect Message_rect = { 202, 180 - h, w, h };
@@ -193,6 +193,7 @@ SDL_Texture* paintbackground(SDL_Renderer* renderer) {
 	TTF_Quit();
 
 	SDL_FreeSurface(surfaceMessage);
+	TTF_CloseFont(Verdana);
 	return Message;
 }
 
