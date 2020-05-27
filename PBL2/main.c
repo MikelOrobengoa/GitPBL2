@@ -61,17 +61,9 @@ int main(int argc, char* argv[]){
             if (!fileSurface) {
                 printf("Surface-rik ez. Menura bueltatzen.\n");
                 clientState = CLIENT_MAIN_MENU;
-            }
-            else {
-                switch (editor(&fileSurface, renderer)) {
-                case 1:
-                    SDL_DestroyTexture(fileTexture);
-                    fileTexture = SDL_CreateTextureFromSurface(renderer, fileSurface);
-                    break;
-                case 2:
-                    running = 0;
-                    break;
-                }
+            } else if(editor(&fileSurface, renderer)) {
+                SDL_DestroyTexture(fileTexture);
+                fileTexture = SDL_CreateTextureFromSurface(renderer, fileSurface);
             }
             renderEditor(renderer, fileTexture);
             if (KEYS[SDLK_s]) clientState = CLIENT_SIM;
