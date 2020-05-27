@@ -82,7 +82,6 @@ void initNodes() {
         for (int i = 0; i < X_TILES; i++) {
             nodes[i][j].x = i;
             nodes[i][j].y = j;
-            nodes[i][j].neighboursCount = 0;
             
             if (i - 1 >= 0 && j - 1 >= 0) {
                 nodes[i][j].neighbours[nodes[i][j].neighboursCount] = &nodes[i - 1][j - 1];
@@ -171,8 +170,6 @@ int aStar(SDL_Renderer* renderer) {
 
         if (current->id == endNode->id) {
             //for (int i = 0; i < openKop; i++) printf("%d, %d, %d", open[i]->x, open[i]->y, open[i]->id);
-            openKop = 0;
-            closedKop = 0;
             printf("creo que ya he terminado");
             retracePath(startNode, endNode);
             return 1;
@@ -212,7 +209,7 @@ int aStar(SDL_Renderer* renderer) {
         }
         SDL_RenderPresent(renderer);
     }
-    printf("Path foundn't\n");
+
     return 0;
 }
 
@@ -252,7 +249,6 @@ void printfPath(SDL_Renderer* renderer) {
         SDL_RenderFillRect(renderer, &r);
         printf("%d, (%d, %d) g: %f, h: %f f: %f\n", i, path[i]->x, path[i]->y, path[i]->g, path[i]->h, path[i]->f);
 
-        SDL_RenderPresent(renderer);
-        Sleep(100);
     }
+
 }
