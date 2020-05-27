@@ -68,7 +68,7 @@ int main(int argc, char* argv[]){
                     fileTexture = SDL_CreateTextureFromSurface(renderer, fileSurface);
                     break;
                 case 2:
-                    running = 0;
+                    running = 2;
                     break;
                 }
             }
