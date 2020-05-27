@@ -5,7 +5,7 @@ Hasierako menuaren funtzio nagusia. Botoiak sakatzen diren begiratu. Sakatzean f
 */
 int mainMenu(SDL_Renderer* renderer, SDL_Surface** surface, int* clientState) {
     int running = 1;
-    SDL_Rect btn_import = { 211, 318, 327, 108 }, btn_newFile = { 211, 318 + 41 + 108, 327, 108 }, btn_quit = { 211, 318 + 82 + 216, 327, 108 };
+    SDL_Rect btn_import = { 221, 476, 342, 94 }, btn_newFile = { 221, 340, 342, 94 }, btn_quit = { 221, 617, 342, 94 };
     if (MOUSE_CLICK) {
         if (checkButton(btn_quit)) {
             running = 0;

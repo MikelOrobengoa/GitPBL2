@@ -81,7 +81,7 @@ void eventHandler(SDL_Event e);
 
 //Editor
 void getTilePos(int* x, int* y);
-int editor(SDL_Surface** surface, SDL_Renderer* renderer);
+int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState);
 void renderGrid(SDL_Renderer* renderer);
 int paintTile(SDL_Surface* surface, SDL_Color color);
 int renderTilePreview(SDL_Renderer* renderer);
