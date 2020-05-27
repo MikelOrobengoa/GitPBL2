@@ -57,10 +57,11 @@ int checkButton(SDL_Rect btn);
 int loadMenu(SDL_Surface** surface);
 
 //Files
-int exportMap(SDL_Surface* surface);
-void obtainpath(char* path);
-int importMap(SDL_Surface** surface);
-
+int exportMap(SDL_Surface* surface, SDL_Renderer* renderer);
+void moveright(int start, char* path);
+void showpath(char* path, SDL_Renderer* renderer, int position_path);
+int formatuegokia(char* path);
+int importMap(SDL_Renderer* renderer, SDL_Surface** surface);
 
 //Pathfinding
 int loadMap(SDL_Surface* surface);
@@ -74,17 +75,16 @@ int aStar(SDL_Renderer* renderer);
 void removeNode(node* element, int* kop, node** list);
 void retracePath(node* start, node* end);
 void printfPath(SDL_Renderer* renderer);
+
 //Events
 void eventHandler(SDL_Event e);
 
 //Editor
 void getTilePos(int* x, int* y);
-int editor(SDL_Surface** surface);
+int editor(SDL_Surface** surface, SDL_Renderer* renderer);
 void renderGrid(SDL_Renderer* renderer);
 int paintTile(SDL_Surface* surface, SDL_Color color);
 int renderTilePreview(SDL_Renderer* renderer);
-int loadEditorMenu(SDL_Surface** surface);
-void renderEditor(SDL_Renderer* renderer, SDL_Surface* fileTexture);
 
 
 
