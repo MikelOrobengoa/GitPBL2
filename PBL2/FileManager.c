@@ -77,17 +77,27 @@ int exportMap(SDL_Surface* surface, SDL_Renderer* renderer) {
 				else if (event.key.keysym.sym == SDLK_RETURN) {
 					done = SDL_TRUE;
 				}
+				else if (event.key.keysym.sym == SDLK_ESCAPE) {
+					done = SDL_TRUE;
+					gorde = -1;
+				}
 				pathMessage = showpath(path, renderer, position_path, pathMessage);
 				break;
 			}
 		}
 	}
 	SDL_StopTextInput();
-	if (gorde && formatuegokia(path)) {
-		gorde = IMG_SavePNG(surface, path);
-		if (gorde == 0)gorde = 1;
+	if (gorde == 1) {
+		int formatua = formatuegokia(path);
+		if (formatua) {
+			gorde = IMG_SavePNG(surface, path);
+			if (gorde == 0)gorde = 1;
+		}
+		else gorde = 0;
 	}
-	else gorde = 2;
+	else if (gorde == 0) gorde = 2;
+	else if (gorde == -1) gorde = 3;
+
 
 	SDL_DestroyTexture(pathTitle);
 	SDL_DestroyTexture(pathMessage);

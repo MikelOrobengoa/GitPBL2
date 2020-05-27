@@ -11,7 +11,7 @@ Editorearen funtzio nagusia.
 [2] Sagua menutik behera badago, 'canvas' barruan, klik egitean lauza margotu.
 [3] Sagua menuan badago, bertako botoi desberdinak klikatu diren begiratu eta beharrezko funtzioak deitu edo kolorea aldatu
 */
-int editor(SDL_Surface** surface, SDL_Renderer* renderer) {
+int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
     static int isSaved, costColor = 4;
     int changed = 0;
 
@@ -84,7 +84,7 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer) {
                     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Ezin izan da exportatu fitxategia\n-Ez da aurkitu direktorioa", NULL);
                     break;
                 case 0:
-                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Ezin izan da exportatu fitxategia", NULL);
+                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Ezin izan da exportatu fitxategia\n-Zihurtatu .png formatuan exportatzen dela", NULL);
                     break;
                 case 1:
                     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "SAVE", "Exportatu da png fitxategia", NULL);
@@ -121,7 +121,7 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer) {
                 color = costs[costColor];
             }
             else if (checkButton(btn_sim)) {
-                printf("HAHA NO SIM SIMP\n");
+                *clientState = CLIENT_SIM;
             }
             else if (checkButton(btn_help)) {
                 printf("HAHA NO HELP LUL\n");
