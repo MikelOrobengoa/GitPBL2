@@ -5,22 +5,51 @@ Hasierako menuaren funtzio nagusia. Botoiak sakatzen diren begiratu. Sakatzean f
 */
 int mainMenu(SDL_Renderer* renderer, SDL_Surface** surface, int* clientState) {
     int running = 1;
+    static int button = -1;
     SDL_Rect btn_import = { 221, 476, 342, 94 }, btn_newFile = { 221, 340, 342, 94 }, btn_quit = { 221, 617, 342, 94 };
+    static SDL_Texture* TexMenu = NULL;
+    if (!TexMenu) {
+        SDL_Surface* surfMenu = NULL;
+        if (loadMenu(&surfMenu)) {
+            TexMenu = SDL_CreateTextureFromSurface(renderer, surfMenu);
+            SDL_FreeSurface(surfMenu);
+        }
+    }
+
     if (MOUSE_CLICK) {
         if (checkButton(btn_quit)) {
+            SDL_RenderCopy(renderer, TexMenu, NULL, NULL);
+            if(button == 0) drawIMG(renderer, "images/exit_click.png", btn_quit);
+            button = 0;
+        }
+        else if (checkButton(btn_import)) {
+            SDL_RenderCopy(renderer, TexMenu, NULL, NULL);
+            if (button == 1)drawIMG(renderer, "images/import_click.png", btn_import);
+            button = 1;
+        }
+        else if (checkButton(btn_newFile)) {
+            SDL_RenderCopy(renderer, TexMenu, NULL, NULL);            
+            if (button == 2) drawIMG(renderer, "images/new_click.png", btn_newFile);
+            button = 2;
+        }
+    }
+    else {
+        if (button == 0 && checkButton(btn_quit)) {
             running = 0;
         }
-        else if (KEYS[SDLK_i] || checkButton(btn_import)) {
+        else if (button == 1 && checkButton(btn_import)) {
             if (importMap(surface)) *clientState = CLIENT_EDITOR;
         }
-        else if (KEYS[SDLK_n] || checkButton(btn_newFile)) {
+        else if (button == 2 && checkButton(btn_newFile)) {
             *surface = SDL_CreateRGBSurface(0, WIDTH, HEIGHT, 32, NULL, NULL, NULL, NULL);
             if (!*surface) return 0;
             SDL_FillRect(*surface, NULL, SDL_MapRGB((*surface)->format, 255, 255, 255));
             *clientState = CLIENT_EDITOR;
         }
+        else SDL_RenderCopy(renderer, TexMenu, NULL, NULL);
+        button = -1;
     }
-
+    SDL_RenderPresent(renderer);    
     return running;
 }
 
