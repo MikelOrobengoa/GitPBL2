@@ -6,12 +6,12 @@ Fitxategiaren izena eta direktorioa ezartzeko aukera WIP
 */
 int exportMap(SDL_Surface* surface, SDL_Renderer* renderer) {
 	static char path[128] = "";
-	int gorde = 1, position_path = 0;
+	int gorde = 1, position_path = 0, botoia = 2;
 	SDL_Rect rect = { 200, HEIGHT / 2 - 50, WIDTH - 400, 50 };
 	SDL_bool done = SDL_FALSE;
-	SDL_Texture* pathMessage = NULL, * pathTitle;
-
-	pathTitle = paintbackground(renderer);
+	SDL_Texture* pathMessage = NULL;
+	SDL_Rect btn_Save = { WIDTH / 2 - 96 / 2, 270, 96, 26 };
+	SDL_Rect btn_Exit = { WIDTH / 2 - 96 / 2, 307, 96, 26 };
 	pathMessage = showpath(path, renderer, position_path, pathMessage);
 
 
@@ -38,6 +38,39 @@ int exportMap(SDL_Surface* surface, SDL_Renderer* renderer) {
 					position_path++;
 				}
 				pathMessage = showpath(path, renderer, position_path, pathMessage);
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+				if (checkButton(btn_Save)) {
+					SDL_Surface* surf_save = NULL;
+					loadIMG(&surf_save, "images/save_selected.png");
+					if (surf_save) {
+						SDL_Texture* Save = SDL_CreateTextureFromSurface(renderer, surf_save);
+						SDL_FreeSurface(surf_save);
+						SDL_RenderCopy(renderer, Save, NULL, &btn_Save);
+						SDL_RenderPresent(renderer);
+					}
+					botoia = 0;
+				}
+				else if (checkButton(btn_Exit)) {
+					SDL_Surface* surf_exit = NULL;
+					loadIMG(&surf_exit, "images/exit_selected.png");
+					if (surf_exit) {
+						SDL_Texture* Exit = SDL_CreateTextureFromSurface(renderer, surf_exit);
+						SDL_FreeSurface(surf_exit);
+						SDL_RenderCopy(renderer, Exit, NULL, &btn_Exit);
+						SDL_RenderPresent(renderer);
+					}
+					botoia = 1;
+				}
+				break;
+			case SDL_MOUSEBUTTONUP:
+				if (botoia == 0) {
+					done = SDL_TRUE;
+				}
+				else if (botoia == 1) {
+					done = SDL_TRUE;
+					gorde = -1;
+				}
 				break;
 			case SDL_KEYDOWN:
 				if (event.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL) {
@@ -99,7 +132,6 @@ int exportMap(SDL_Surface* surface, SDL_Renderer* renderer) {
 	else if (gorde == -1) gorde = 3;
 
 
-	SDL_DestroyTexture(pathTitle);
 	SDL_DestroyTexture(pathMessage);
 
 	return gorde;
@@ -180,28 +212,6 @@ int formatuegokia(char* path) {
 		return 1;
 	}
 	else return 0;
-}
-
-SDL_Texture* paintbackground(SDL_Renderer* renderer) {
-	SDL_Rect background = { 0, 0, 768, 768 };
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 150);
-	SDL_RenderFillRect(renderer, &background);
-
-	TTF_Init();
-	TTF_Font* Verdana = TTF_OpenFont("verdanab.ttf", 24);
-	SDL_Color White = { 255, 255, 255, 255 };
-	int w, h;
-	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Verdana, "Sartu direktorioa eta izena:", White);
-	SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
-	SDL_QueryTexture(Message, NULL, NULL, &w, &h);
-	SDL_Rect Message_rect = { 202, 180 - h, w, h };
-	SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
-	SDL_RenderPresent(renderer);
-	TTF_Quit();
-
-	SDL_FreeSurface(surfaceMessage);
-	TTF_CloseFont(Verdana);
-	return Message;
 }
 
 /*

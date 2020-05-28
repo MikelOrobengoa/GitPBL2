@@ -88,6 +88,8 @@ int paintTile(SDL_Surface* surface, SDL_Color color);
 int renderTilePreview(SDL_Renderer* renderer);
 int loadEditorMenu(SDL_Surface** surface);
 void renderEditor(SDL_Renderer* renderer, SDL_Surface* fileTexture);
+int loadIMG(SDL_Surface** surface, char* image_path);
+void exportMenu(SDL_Renderer* renderer);
 
 
 
