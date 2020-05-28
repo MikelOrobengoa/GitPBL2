@@ -14,7 +14,12 @@ Editorearen funtzio nagusia.
 int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
     static int costColor = 4, button = -1;
     int changed = 0;
-
+    SDL_Texture* menuBarTexture = NULL;
+    SDL_Rect menuBar = { 0, 0, WIDTH, MENU_HEIGHT };
+    SDL_Surface* menuBarSurface = NULL;
+    loadEditorMenu(&menuBarSurface);
+    if (menuBarSurface) menuBarTexture = SDL_CreateTextureFromSurface(renderer, menuBarSurface);
+    SDL_FreeSurface(menuBarSurface);
     //Color palette
     
     SDL_Color
@@ -37,6 +42,12 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
             updateMap(color);
             changed = 1;
         }
+        else {
+            if (button != -1) {
+                SDL_RenderCopy(renderer, menuBarTexture, NULL, &menuBar);
+            }
+                button = -1;
+        }
     }
     else { //Menu
         SDL_Rect
@@ -52,17 +63,60 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
             btn_sim = { 600, 3, 96, 26 },
             btn_help = { 734, 3, 28, 26 };
         if (MOUSE_CLICK) {
-            if (checkButton(btn_new)) button = 0;
-            else if (checkButton(btn_import)) button = 1;
-            else if (checkButton(btn_export)) button = 2;
-            else if (checkButton(btn_red)) button = 3;
-            else if (checkButton(btn_green)) button = 4;
-            else if (checkButton(btn_blue)) button = 5;
-            else if (checkButton(btn_minus)) button = 6;
-            else if (checkButton(btn_cost)) button = 7;
-            else if (checkButton(btn_plus)) button = 8;
-            else if (checkButton(btn_sim)) button = 9;
-            else if (checkButton(btn_help)) button = 10;
+            if (checkButton(btn_new)) {
+                SDL_RenderCopy(renderer, menuBarTexture, NULL, &menuBar);
+                if(button == 0) drawIMG(renderer, "images/new_click.png", btn_new);
+                button = 0;
+            }
+            else if (checkButton(btn_import)) {
+                SDL_RenderCopy(renderer, menuBarTexture, NULL, &menuBar);
+                if (button == 1)drawIMG(renderer, "images/import_click.png", btn_import);
+                button = 1;
+            }
+            else if (checkButton(btn_export)) {
+                SDL_RenderCopy(renderer, menuBarTexture, NULL, &menuBar);
+                if (button == 2)drawIMG(renderer, "images/export_click.png", btn_export);
+                button = 2;
+            }
+            else if (checkButton(btn_red)) {
+                SDL_RenderCopy(renderer, menuBarTexture, NULL, &menuBar);
+                if (button == 3)drawIMG(renderer, "images/red_click.png", btn_red);
+                button = 3;
+            }
+            else if (checkButton(btn_green)) {
+                SDL_RenderCopy(renderer, menuBarTexture, NULL, &menuBar);
+                if (button == 4)drawIMG(renderer, "images/green_click.png", btn_green);
+                button = 4;
+            }
+            else if (checkButton(btn_blue)) {
+                SDL_RenderCopy(renderer, menuBarTexture, NULL, &menuBar);
+                if (button == 5)drawIMG(renderer, "images/blue_click.png", btn_blue);
+                button = 5;
+            }
+            else if (checkButton(btn_minus)) {
+                SDL_RenderCopy(renderer, menuBarTexture, NULL, &menuBar);
+                if (button == 6)drawIMG(renderer, "images/minus_click.png", btn_minus);
+                button = 6;
+            }
+            else if (checkButton(btn_cost)) {
+                // drawIMG(renderer, , btn_cost);
+                button = 7;
+            }
+            else if (checkButton(btn_plus)) {
+                SDL_RenderCopy(renderer, menuBarTexture, NULL, &menuBar);
+                if (button == 8)drawIMG(renderer, "images/plus_click.png", btn_plus);
+                button = 8;
+            }
+            else if (checkButton(btn_sim)) {
+                SDL_RenderCopy(renderer, menuBarTexture, NULL, &menuBar);
+                if (button == 9)drawIMG(renderer, "images/simulate_click.png", btn_sim);
+                button = 9;
+            }
+            else if (checkButton(btn_help)) {
+                SDL_RenderCopy(renderer, menuBarTexture, NULL, &menuBar);
+                if(button == 10)drawIMG(renderer, "images/help_click.png", btn_help);
+                button = 10;
+            }       
         }
         else {
             if (button == 0) {
@@ -87,7 +141,6 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
                 }
             }
             else if (button == 2) {
-                exportMenu(renderer);
                 switch (exportMap(*surface, renderer)) {
                 case -1:
                     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Ezin izan da exportatu fitxategia\n-Ez da aurkitu direktorioa", NULL);
@@ -135,9 +188,9 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
             else if (button == 10) {
                 printf("HAHA NO HELP LUL\n");
             }
+            SDL_RenderCopy(renderer, menuBarTexture, NULL, &menuBar);
             button = -1;
         }   
-      
     }
 
     return changed;
@@ -199,21 +252,21 @@ void getTilePos(int* x, int* y) {
     *y -= *y % TILESIZE;
 }
 
-void renderEditor(SDL_Renderer* renderer, SDL_Surface* fileTexture) {
+void renderEditor(SDL_Renderer* renderer, SDL_Texture* fileTexture) {
     static SDL_Texture* menuBarTexture = NULL;
+    SDL_Rect menuBar = { 0, 0, WIDTH, MENU_HEIGHT };
     if (!menuBarTexture) {
         SDL_Surface* menuBarSurface = NULL;
         loadEditorMenu(&menuBarSurface);
         if (menuBarSurface) menuBarTexture = SDL_CreateTextureFromSurface(renderer, menuBarSurface);
         SDL_FreeSurface(menuBarSurface);
+        SDL_RenderCopy(renderer, menuBarTexture, NULL, &menuBar);
     }
 
     SDL_Rect screen = { 0, MENU_HEIGHT, WIDTH, HEIGHT};
-    SDL_Rect menuBar = { 0, 0, WIDTH, MENU_HEIGHT };
     SDL_RenderCopy(renderer, fileTexture, NULL, &screen);
     renderGrid(renderer);
     renderTilePreview(renderer);
-    SDL_RenderCopy(renderer, menuBarTexture, NULL, &menuBar);
 }
 
 int loadEditorMenu(SDL_Surface** surface) {
@@ -273,7 +326,7 @@ void exportMenu(SDL_Renderer* renderer) {
 }
 
 SDL_Texture* paintbackground(SDL_Renderer* renderer) {
-    SDL_Rect background = { 0, 0, 768, 768 };
+    SDL_Rect background = { 0, 0, 768 + MENU_HEIGHT, 768 };
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 180);
     SDL_RenderFillRect(renderer, &background);
 
@@ -292,4 +345,15 @@ SDL_Texture* paintbackground(SDL_Renderer* renderer) {
     SDL_FreeSurface(surfaceMessage);
     TTF_CloseFont(Verdana);
     return Message;
+}
+
+void drawIMG(SDL_Renderer* renderer, char* path, SDL_Rect btn) {
+    SDL_Surface* surf = NULL;
+    loadIMG(&surf, path);
+    if (surf) {
+        SDL_Texture* Tex = SDL_CreateTextureFromSurface(renderer, surf);
+        SDL_FreeSurface(surf);
+        SDL_RenderCopy(renderer, Tex, NULL, &btn);
+        SDL_RenderPresent(renderer);
+    }
 }

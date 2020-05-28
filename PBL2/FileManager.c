@@ -12,6 +12,7 @@ int exportMap(SDL_Surface* surface, SDL_Renderer* renderer) {
 	SDL_Texture* pathMessage = NULL;
 	SDL_Rect btn_Save = { WIDTH / 2 - 96 / 2, 270, 96, 26 };
 	SDL_Rect btn_Exit = { WIDTH / 2 - 96 / 2, 307, 96, 26 };
+	exportMenu(renderer);
 	pathMessage = showpath(path, renderer, position_path, pathMessage);
 
 
