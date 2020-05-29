@@ -62,13 +62,13 @@ int main(int argc, char* argv[]){
                 printf("Surface-rik ez. Menura bueltatzen.\n");
                 clientState = CLIENT_MAIN_MENU;
             } else {
-                switch (editor(&fileSurface, renderer)) {
+                switch (editor(&fileSurface, renderer, &clientState)) {
                 case 1:
                     SDL_DestroyTexture(fileTexture);
                     fileTexture = SDL_CreateTextureFromSurface(renderer, fileSurface);
                     break;
                 case 2:
-                    running = 2;
+                    running = 0;
                     break;
                 }
             }
@@ -80,10 +80,8 @@ int main(int argc, char* argv[]){
                 initNodes();
                 loadMap(fileSurface);
                 aStar(renderer);
-                printf("printing path");
                 printfPath(renderer);
-                working = 1;
-                //clientState = CLIENT_EDITOR;
+                clientState = CLIENT_EDITOR;
             }
             
         }
