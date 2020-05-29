@@ -60,6 +60,8 @@ int loadMenu(SDL_Surface** surface);
 int exportMap(SDL_Surface* surface, SDL_Renderer* renderer);
 void moveright(int start, char* path);
 SDL_Texture* showpath(char* path, SDL_Renderer* renderer, int position_path, SDL_Texture* Message);
+int obtainPtrPosition(SDL_Renderer* renderer, TTF_Font* Verdana, int position_path, int i, char* path);
+void renderpath(SDL_Renderer* renderer, SDL_Texture* Message, int ptrPos, int h, int w);
 SDL_Texture* paintbackground(SDL_Renderer* renderer);
 int formatuegokia(char* path);
 int importMap(SDL_Surface** surface);
