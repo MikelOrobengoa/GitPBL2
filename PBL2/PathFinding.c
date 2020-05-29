@@ -121,7 +121,7 @@ void initNodes() {
 }
 
 double calculateHValue(int ogX, int ogY, int destX, int destY) {
-    return sqrt(pow((double)ogX - destX, 2) + pow((double)ogY - destY, 2));
+    return sqrt(((double)ogX - destX) * ((double)ogX - destX) + ((double)ogY - destY) * ((double)ogY - destY));
     //double d1, d2;
     //d1 = abs(ogX - destX);
     //d2 = abs(ogY - destY);
@@ -133,38 +133,41 @@ double calculateHValue(int ogX, int ogY, int destX, int destY) {
 }
 
 int aStar(SDL_Renderer* renderer) {
-    /*for (int i = 0; i < 24; i++) {
-        for (int j = 0; j < 24; j++) {
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-            SDL_RenderClear(renderer, NULL);
-            SDL_Rect r = { nodes[i][j].x * TILESIZE,  nodes[i][j].y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
-            SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
-            SDL_RenderFillRect(renderer, &r);
-            for (int n = 0; n < nodes[i][j].neighboursCount; n++) {
-                SDL_Rect r = { nodes[i][j].neighbours[n]->x * TILESIZE, nodes[i][j].neighbours[n]->y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
-                SDL_SetRenderDrawColor(renderer, 196, 64, 64, 255);
-                SDL_RenderFillRect(renderer, &r);
-                SDL_RenderPresent(renderer);
-            }
-                Sleep(1000);
-        }
-    }*/
+    //for (int i = 0; i < 24; i++) {
+    //    for (int j = 0; j < 24; j++) {
+    //        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    //        SDL_RenderClear(renderer, NULL);
+    //        SDL_Rect r = { nodes[i][j].x * TILESIZE,  nodes[i][j].y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
+    //        SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+    //        SDL_RenderFillRect(renderer, &r);
+    //        for (int n = 0; n < nodes[i][j].neighboursCount; n++) {
+    //            SDL_Rect r = { nodes[i][j].neighbours[n]->x * TILESIZE, nodes[i][j].neighbours[n]->y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
+    //            SDL_SetRenderDrawColor(renderer, 196, 64, 64, 255);
+    //            SDL_RenderFillRect(renderer, &r);
+    //            SDL_RenderPresent(renderer);
+    //        }
+    //            Sleep(1000);
+    //    }
+    //}
+    //SDL_RenderPresent(renderer);
     
-    SDL_RenderPresent(renderer);
-    for (int i = 0; i < 24; i++) printf("%d", nodes[i][3].block);
+
     openKop = 1;
     open[0] = startNode;
     closedKop = 0;
     while (openKop > 0) {
         Sleep(10);
+        
         int lowestIndex = 0;
 
-        for (int i = 1; i < openKop; i++) {
-            if (open[i]->f <= open[lowestIndex]->f && open[i]->h <= open[lowestIndex]->h) lowestIndex = i;
+        for (int i = 0; i < openKop; i++) {
+            //if (open[i]->f < open[lowestIndex]->f) lowestIndex = i;
         }
         node* current = open[lowestIndex];
-        //printf("current: (%d, %d)\n", current->x, current->y);
-
+        printf("current: (%d, %d) f:%f, g: %f, h: %f, n:%d\n", current->x, current->y, current->f, current->g, current->h, current->neighboursCount);
+        SDL_Rect r = { current->x * TILESIZE, current->y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
+        SDL_SetRenderDrawColor(renderer, 128, 255, 128, 255);
+        SDL_RenderFillRect(renderer, &r);
         closed[closedKop] = current;
         closedKop++;
         removeNode(current, &openKop, open);
@@ -184,13 +187,14 @@ int aStar(SDL_Renderer* renderer) {
                 continue;
             else {
                 double newNeighbourCost = current->g + calculateHValue(current->x, current->y, neighbour->x, neighbour->y) + neighbour->cost;
-                //double newNeighbourCost = current->g + neighbour->cost + 1;
-                if (newNeighbourCost <= neighbour->g ||!containsNode(neighbour, openKop, open)) {
-                    if (newNeighbourCost <= neighbour->g) printf("ha gorim");
+                //double newNeighbourCost = current->g + neighbour->cost + 1;ç
+                if(newNeighbourCost < neighbour->g) printf("haha caistes\n");
+                if (newNeighbourCost < neighbour->g ||!containsNode(neighbour, openKop, open)) {
                     neighbour->g = newNeighbourCost;
                     neighbour->h = calculateHValue(neighbour->x, neighbour->y, endNode->x, endNode->y);
                     neighbour->f = neighbour->g + neighbour->h;
                     neighbour->parent = current;
+                    
 
                     if (!containsNode(neighbour, openKop, open)) {
                         open[openKop] = neighbour;
@@ -199,16 +203,25 @@ int aStar(SDL_Renderer* renderer) {
                 }
             }
         }
-
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_RenderClear(renderer);
         for (int i = 0; i < openKop; i++) {
             SDL_Rect r = { open[i]->x * TILESIZE, open[i]->y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
-            SDL_SetRenderDrawColor(renderer, 255, 255, 0, 32);
+            SDL_SetRenderDrawColor(renderer, 128, 255, 128, 255);
             SDL_RenderFillRect(renderer, &r);
         }
         for (int i = 0; i < closedKop; i++) {
             SDL_Rect r = { closed[i]->x * TILESIZE, closed[i]->y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
-            SDL_SetRenderDrawColor(renderer, 196, 64, 64, 32);
+            SDL_SetRenderDrawColor(renderer, 160, 255, 160, 80);
             SDL_RenderFillRect(renderer, &r);
+        }
+        for (int i = 0; i < closedKop; i++) {
+            SDL_SetRenderDrawColor(renderer, 255, 160, 160, 255);
+            if(closed[i]->parent)SDL_RenderDrawLine(renderer, closed[i]->x * TILESIZE + TILESIZE / 2, closed[i]->y * TILESIZE + TILESIZE + TILESIZE / 2, closed[i]->parent->x * TILESIZE + TILESIZE / 2, closed[i]->parent->y * TILESIZE + TILESIZE + TILESIZE / 2);
+        }
+        for (int i = 0; i < openKop; i++) {
+            SDL_SetRenderDrawColor(renderer, 255, 160, 160, 255);
+           if(open[i]->parent) SDL_RenderDrawLine(renderer, open[i]->x * TILESIZE + TILESIZE / 2, open[i]->y * TILESIZE + TILESIZE + TILESIZE / 2, open[i]->parent->x * TILESIZE + TILESIZE / 2, open[i]->parent->y * TILESIZE + TILESIZE + TILESIZE / 2);
         }
         SDL_RenderPresent(renderer);
     }
@@ -242,17 +255,33 @@ void retracePath(node* start, node* end) {
         i++;
         current = current->parent;
     }
+    *(path + i) = start;
+    i++;
     pathKop = i;
 }
 
 void printfPath(SDL_Renderer* renderer) {
-    for (int i = 0; i < pathKop; i++) {
-        SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
-        SDL_Rect r = { path[i]->x * TILESIZE, path[i]->y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
-        SDL_RenderFillRect(renderer, &r);
-        printf("%d, (%d, %d) g: %f, h: %f f: %f\n", i, path[i]->x, path[i]->y, path[i]->g, path[i]->h, path[i]->f);
+    //for (int i = 0; i < pathKop; i++) {
+    //    SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
+    //    SDL_Rect r = { path[i]->x * TILESIZE, path[i]->y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
+    //    SDL_RenderFillRect(renderer, &r);
+    //    printf("%d, (%d, %d) g: %f, h: %f f: %f\n", i, path[i]->x, path[i]->y, path[i]->g, path[i]->h, path[i]->f);
 
-        SDL_RenderPresent(renderer);
-        Sleep(100);
+    //    SDL_RenderPresent(renderer);
+    //    
+    //}
+    SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
+    for (int i = 0; i < pathKop - 1; i++) {
+        for (int j = -1; j < 2; j++) {
+            for (int k = -1; k < 2; k++) {
+                SDL_RenderDrawLine(renderer,
+                    path[i]->x * TILESIZE + j + TILESIZE / 2,
+                    path[i]->y * TILESIZE + TILESIZE + k + TILESIZE / 2,
+                    path[i + 1]->x * TILESIZE + j + TILESIZE / 2,
+                    path[i + 1]->y * TILESIZE + TILESIZE + k + TILESIZE / 2);
+            }
+        }
+    SDL_RenderPresent(renderer);
+    Sleep(1000);
     }
 }
