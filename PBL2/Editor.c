@@ -14,14 +14,21 @@ Editorearen funtzio nagusia.
 int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
     static int costColor = 4, button = -1, button_aurrekoa = -1;
     int changed = 0;
-    static SDL_Texture* menuBarTexture = NULL;
     SDL_Rect menuBar = { 0, 0, WIDTH, MENU_HEIGHT }, btn_cost = { 500, 3, 28, 26 };
+    static SDL_Texture* menuBarTexture = NULL, *red_click = NULL, *blue_click = NULL, *green_click = NULL, *c0 = NULL, *c0_click = NULL, * c1 = NULL, * c1_click = NULL, * c2 = NULL, * c2_click = NULL, * c3 = NULL, * c3_click = NULL, * c4 = NULL, * c4_click = NULL, *New = NULL, *Export = NULL, *Import = NULL, *minus = NULL, * plus = NULL, *help = NULL, *simulate = NULL;
     if (!menuBarTexture) {
-        SDL_Surface* menuBarSurface = NULL;
-        loadEditorMenu(&menuBarSurface);
-        if (menuBarSurface) menuBarTexture = SDL_CreateTextureFromSurface(renderer, menuBarSurface);
-        SDL_FreeSurface(menuBarSurface);
-        paintCost(renderer, btn_cost, ".png", costColor);
+        loadTexture(&menuBarTexture, renderer, "images/menuBar.png");
+        loadTexture(&red_click, renderer, "images/red_click.png");
+        loadTexture(&blue_click, renderer, "images/blue_click.png");
+        loadTexture(&green_click, renderer, "images/green_click.png");
+        loadTexture(&New, renderer, "images/new_click.png");
+        loadTexture(&Export, renderer, "images/export_click.png");
+        loadTexture(&Import, renderer, "images/import_click.png");
+        loadTexture(&help, renderer, "images/help_click.png");
+        loadTexture(&simulate, renderer, "images/simulate_click.png");
+        loadTexture(&minus, renderer, "images/minus_click.png");
+        loadTexture(&plus, renderer, "images/plus_click.png");
+        loadCost(renderer, &c0, &c0_click, &c1, &c1_click, &c2, &c2_click, &c3, &c3_click, &c4, &c4_click);
     }
     //Color palette
     
@@ -48,7 +55,23 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
         else {
             if (button == -1) {
                 SDL_RenderCopy(renderer, menuBarTexture, NULL, &menuBar);
-                paintCost(renderer, btn_cost, ".png", costColor);
+                switch (costColor) {
+                case 0:
+                    SDL_RenderCopy(renderer, c0, NULL, &btn_cost);
+                    break;
+                case 1:
+                    SDL_RenderCopy(renderer, c1, NULL, &btn_cost);
+                    break;
+                case 2:
+                    SDL_RenderCopy(renderer, c2, NULL, &btn_cost);
+                    break;
+                case 3:
+                    SDL_RenderCopy(renderer, c3, NULL, &btn_cost);
+                    break;
+                case 4:
+                    SDL_RenderCopy(renderer, c4, NULL, &btn_cost);
+                    break;
+                }
             }
             button = -1;
         }
@@ -73,7 +96,7 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
                 }
                 else if (button == 0 && button != button_aurrekoa) {
                     button_aurrekoa = button;
-                    drawIMG(renderer, "images/new_click.png", btn_new);
+                    SDL_RenderCopy(renderer, New, NULL, &btn_new);
                 }
                 button = 0;
             }
@@ -84,7 +107,7 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
                 }
                 else if (button == 1 && button != button_aurrekoa) {
                     button_aurrekoa = button;
-                    drawIMG(renderer, "images/import_click.png", btn_import);
+                    SDL_RenderCopy(renderer, Import, NULL, &btn_import);
                 }
                 button = 1;
             }
@@ -95,7 +118,7 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
                 }
                 else if (button == 2 && button != button_aurrekoa) {
                     button_aurrekoa = button;
-                    drawIMG(renderer, "images/export_click.png", btn_export);
+                    SDL_RenderCopy(renderer, Export, NULL, &btn_export);
                 }
                 button = 2;
             }
@@ -106,7 +129,7 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
                 }
                 else if (button == 3 && button != button_aurrekoa) {
                     button_aurrekoa = button;
-                    drawIMG(renderer, "images/red_click.png", btn_red);
+                    SDL_RenderCopy(renderer, red_click, NULL, &btn_red);
                 }
                 button = 3;
             }
@@ -117,7 +140,7 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
                 }
                 else if (button == 4 && button != button_aurrekoa) {
                     button_aurrekoa = button;
-                    drawIMG(renderer, "images/green_click.png", btn_green);
+                    SDL_RenderCopy(renderer, green_click, NULL, &btn_green);
                 }
                 button = 4;
             }
@@ -128,7 +151,7 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
                 }
                 else if (button == 5 && button != button_aurrekoa) {
                     button_aurrekoa = button;
-                    drawIMG(renderer, "images/blue_click.png", btn_blue);
+                    SDL_RenderCopy(renderer, blue_click, NULL, &btn_blue);
                 }
                 button = 5;
             }
@@ -139,7 +162,7 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
                 }
                 else if (button == 6 && button != button_aurrekoa) {
                     button_aurrekoa = button;
-                    drawIMG(renderer, "images/minus_click.png", btn_minus);
+                    SDL_RenderCopy(renderer, minus, NULL, &btn_minus);
                 }
                 button = 6;
             }
@@ -150,7 +173,23 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
                 }
                 else if (button == 7 && button != button_aurrekoa) {
                     button_aurrekoa = button;
-                    paintCost(renderer, btn_cost, "_click.png", costColor);
+                    switch (costColor) {
+                    case 0:
+                        SDL_RenderCopy(renderer, c0_click, NULL, &btn_cost);
+                        break;
+                    case 1:
+                        SDL_RenderCopy(renderer, c1_click, NULL, &btn_cost);
+                        break;
+                    case 2:
+                        SDL_RenderCopy(renderer, c2_click, NULL, &btn_cost);
+                        break;
+                    case 3:
+                        SDL_RenderCopy(renderer, c3_click, NULL, &btn_cost);
+                        break;
+                    case 4:
+                        SDL_RenderCopy(renderer, c4_click, NULL, &btn_cost);
+                        break;
+                    }
                 }
                 button = 7;
             }
@@ -161,7 +200,7 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
                 }
                 else if (button == 8 && button != button_aurrekoa) {
                     button_aurrekoa = button;
-                    drawIMG(renderer, "images/plus_click.png", btn_plus);
+                    SDL_RenderCopy(renderer, plus, NULL, &btn_plus);
                 }
                 button = 8;
             }
@@ -172,7 +211,7 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
                 }
                 else if (button == 9 && button != button_aurrekoa) {
                     button_aurrekoa = button;
-                    drawIMG(renderer, "images/simulate_click.png", btn_sim);
+                    SDL_RenderCopy(renderer, simulate, NULL, &btn_sim);
                 }
                     button = 9;
             }
@@ -183,13 +222,30 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
                 }
                 else if (button == 10 && button != button_aurrekoa) {
                     button_aurrekoa = button;
-                    drawIMG(renderer, "images/help_click.png", btn_help);
+                    SDL_RenderCopy(renderer, help, NULL, &btn_help);
                 }
                 button = 10;
             }
             if (button != 7 && button != button_aurrekoa) {
-                paintCost(renderer, btn_cost, ".png", costColor);
+                switch (costColor) {
+                case 0:
+                    SDL_RenderCopy(renderer, c0, NULL, &btn_cost);
+                    break;
+                case 1:
+                    SDL_RenderCopy(renderer, c1, NULL, &btn_cost);
+                    break;
+                case 2:
+                    SDL_RenderCopy(renderer, c2, NULL, &btn_cost);
+                    break;
+                case 3:
+                    SDL_RenderCopy(renderer, c3, NULL, &btn_cost);
+                    break;
+                case 4:
+                    SDL_RenderCopy(renderer, c4, NULL, &btn_cost);
+                    break;
+                }
             }
+            SDL_RenderPresent(renderer);
         }
         else {
             if (button == 0) {
@@ -264,7 +320,23 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
             }
             if (button != -1) {
                 SDL_RenderCopy(renderer, menuBarTexture, NULL, &menuBar);
-                paintCost(renderer, btn_cost, ".png", costColor);
+                switch (costColor) {
+                case 0:
+                    SDL_RenderCopy(renderer, c0, NULL, &btn_cost);
+                    break;
+                case 1:
+                    SDL_RenderCopy(renderer, c1, NULL, &btn_cost);
+                    break;
+                case 2:
+                    SDL_RenderCopy(renderer, c2, NULL, &btn_cost);
+                    break;
+                case 3:
+                    SDL_RenderCopy(renderer, c3, NULL, &btn_cost);
+                    break;
+                case 4:
+                    SDL_RenderCopy(renderer, c4, NULL, &btn_cost);
+                    break;
+                }
             }
             button = -1;
         }
@@ -382,6 +454,16 @@ int loadIMG(SDL_Surface** surface, char* image_path) {
     return loaded;
 }
 
+void loadTexture(SDL_Texture** Tex, SDL_Renderer* renderer, char* path) {
+    SDL_Surface* surface = NULL;
+
+    loadIMG(&surface, path);
+    if (surface) {
+        *Tex = SDL_CreateTextureFromSurface(renderer, surface);
+        SDL_FreeSurface(surface);
+    }
+}
+
 void exportMenu(SDL_Renderer* renderer) {
     SDL_Texture* pathTitle;
     pathTitle = paintbackground(renderer);
@@ -428,22 +510,15 @@ SDL_Texture* paintbackground(SDL_Renderer* renderer) {
     return Message;
 }
 
-void drawIMG(SDL_Renderer* renderer, char* path, SDL_Rect btn) {
-    SDL_Surface* surf = NULL;
-    loadIMG(&surf, path);
-    if (surf) {
-        SDL_Texture* Tex = SDL_CreateTextureFromSurface(renderer, surf);
-        SDL_FreeSurface(surf);
-        SDL_RenderCopy(renderer, Tex, NULL, &btn);
-        SDL_RenderPresent(renderer);
-        SDL_DestroyTexture(Tex);
-    }
-}
-
-void paintCost(SDL_Renderer* renderer, SDL_Rect btn_cost, char* ending, int costColor) {
-    char tmp[2], path[128] = "images/cost";
-    sprintf(tmp, "%d", costColor);
-    strcat(path, tmp);
-    strcat(path, ending);
-    drawIMG(renderer, path, btn_cost);
+void loadCost(SDL_Renderer* renderer, SDL_Texture** c0, SDL_Texture** c0_click, SDL_Texture** c1, SDL_Texture** c1_click, SDL_Texture** c2, SDL_Texture** c2_click, SDL_Texture** c3, SDL_Texture** c3_click, SDL_Texture** c4, SDL_Texture** c4_click) {
+    loadTexture(c0, renderer, "images/cost0.png");
+    loadTexture(c1, renderer, "images/cost1.png");
+    loadTexture(c2, renderer, "images/cost2.png");
+    loadTexture(c3, renderer, "images/cost3.png");
+    loadTexture(c4, renderer, "images/cost4.png");
+    loadTexture(c0_click, renderer, "images/cost0_click.png");
+    loadTexture(c1_click, renderer, "images/cost1_click.png");
+    loadTexture(c2_click, renderer, "images/cost2_click.png");
+    loadTexture(c3_click, renderer, "images/cost3_click.png");
+    loadTexture(c4_click, renderer, "images/cost4_click.png");
 }

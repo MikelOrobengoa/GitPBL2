@@ -88,3 +88,15 @@ int loadMenu(SDL_Surface** surface) {
 
     return loaded;
 }
+
+void drawIMG(SDL_Renderer* renderer, char* path, SDL_Rect btn) {
+    SDL_Surface* surf = NULL;
+    loadIMG(&surf, path);
+    if (surf) {
+        SDL_Texture* Tex = SDL_CreateTextureFromSurface(renderer, surf);
+        SDL_FreeSurface(surf);
+        SDL_RenderCopy(renderer, Tex, NULL, &btn);
+        SDL_RenderPresent(renderer);
+        SDL_DestroyTexture(Tex);
+    }
+}

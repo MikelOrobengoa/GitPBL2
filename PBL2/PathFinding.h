@@ -55,14 +55,17 @@ int init(SDL_Window** win, SDL_Renderer** renderer);
 int mainMenu(SDL_Renderer* renderer, SDL_Surface** surface, int* clientState);
 int checkButton(SDL_Rect btn);
 int loadMenu(SDL_Surface** surface);
+void drawIMG(SDL_Renderer* renderer, char* path, SDL_Rect btn);
 
 //Files
 int exportMap(SDL_Surface* surface, SDL_Renderer* renderer);
+void keydown(SDL_Event event, char* path, int* position_path, int* gorde, SDL_bool* done);
 void moveright(int start, char* path);
 SDL_Texture* showpath(char* path, SDL_Renderer* renderer, int position_path, SDL_Texture* Message);
 int obtainPtrPosition(SDL_Renderer* renderer, TTF_Font* Verdana, int position_path, int i, char* path);
 void renderpath(SDL_Renderer* renderer, SDL_Texture* Message, int ptrPos, int h, int w);
 SDL_Texture* paintbackground(SDL_Renderer* renderer);
+void loadTexture(SDL_Texture** Tex, SDL_Renderer* renderer, char* path);
 int formatuegokia(char* path);
 int importMap(SDL_Surface** surface);
 
@@ -92,8 +95,7 @@ int loadEditorMenu(SDL_Surface** surface);
 void renderEditor(SDL_Renderer* renderer, SDL_Texture* fileTexture);
 int loadIMG(SDL_Surface** surface, char* image_path);
 void exportMenu(SDL_Renderer* renderer);
-void drawIMG(SDL_Renderer* renderer, char* path, SDL_Rect btn);
-void paintCost(SDL_Renderer* renderer, SDL_Rect btn_cost, char* ending, int costColor);
+void loadCost(SDL_Renderer* renderer, SDL_Texture** c0, SDL_Texture** c0_click, SDL_Texture** c1, SDL_Texture** c1_click, SDL_Texture** c2, SDL_Texture** c2_click, SDL_Texture** c3, SDL_Texture** c3_click, SDL_Texture** c4, SDL_Texture** c4_click);
 
 
 

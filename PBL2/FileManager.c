@@ -12,6 +12,11 @@ int exportMap(SDL_Surface* surface, SDL_Renderer* renderer) {
 	SDL_Texture* pathMessage = NULL;
 	SDL_Rect btn_Save = { WIDTH / 2 - 96 / 2, 270, 96, 26 };
 	SDL_Rect btn_Exit = { WIDTH / 2 - 96 / 2, 307, 96, 26 };
+	static SDL_Texture* Save = NULL, *Exit = NULL;
+	if (!Save && !Exit) {
+		loadTexture(&Save, renderer, "images/save_selected.png");
+		loadTexture(&Exit, renderer, "images/exit_selected.png");
+	}
 	exportMenu(renderer);
 	pathMessage = showpath(path, renderer, position_path, pathMessage);
 
@@ -42,25 +47,13 @@ int exportMap(SDL_Surface* surface, SDL_Renderer* renderer) {
 				break;
 			case SDL_MOUSEBUTTONDOWN:
 				if (checkButton(btn_Save)) {
-					SDL_Surface* surf_save = NULL;
-					loadIMG(&surf_save, "images/save_selected.png");
-					if (surf_save) {
-						SDL_Texture* Save = SDL_CreateTextureFromSurface(renderer, surf_save);
-						SDL_FreeSurface(surf_save);
-						SDL_RenderCopy(renderer, Save, NULL, &btn_Save);
-						SDL_RenderPresent(renderer);
-					}
+					SDL_RenderCopy(renderer, Save, NULL, &btn_Save);
+					SDL_RenderPresent(renderer);
 					botoia = 0;
 				}
 				else if (checkButton(btn_Exit)) {
-					SDL_Surface* surf_exit = NULL;
-					loadIMG(&surf_exit, "images/exit_selected.png");
-					if (surf_exit) {
-						SDL_Texture* Exit = SDL_CreateTextureFromSurface(renderer, surf_exit);
-						SDL_FreeSurface(surf_exit);
-						SDL_RenderCopy(renderer, Exit, NULL, &btn_Exit);
-						SDL_RenderPresent(renderer);
-					}
+					SDL_RenderCopy(renderer, Exit, NULL, &btn_Exit);
+					SDL_RenderPresent(renderer);
 					botoia = 1;
 				}
 				break;
@@ -74,47 +67,7 @@ int exportMap(SDL_Surface* surface, SDL_Renderer* renderer) {
 				}
 				break;
 			case SDL_KEYDOWN:
-				if (event.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL) {
-					SDL_SetClipboardText(path);
-				}
-				else if (event.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL) {
-					char tmp[128];
-					strcpy(tmp, path + position_path);
-					path[position_path] = '\0';
-					strcat(path, SDL_GetClipboardText());
-					strcat(path, tmp);
-				}
-				else if (event.key.keysym.sym == SDLK_BACKSPACE) {
-					if (strlen(path) > 0 && position_path == strlen(path)) {
-						path[strlen(path) - 1] = '\0';
-					}
-					else if (position_path > 0) {
-						for (int i = position_path - 1; i < (signed)strlen(path); i++) {
-							path[i] = path[i + 1];
-						}
-					}
-					if (position_path > 0) position_path--;
-				}
-				else if (event.key.keysym.sym == SDLK_DELETE) {
-					if (strlen(path) >= 0 && position_path < (signed)strlen(path)) {
-						for (int i = position_path; i <= (signed)strlen(path); i++) {
-							path[i] = path[i + 1];
-						}
-					}
-				}
-				else if (event.key.keysym.sym == SDLK_LEFT) {
-					if (position_path > 0) position_path--;
-				}
-				else if (event.key.keysym.sym == SDLK_RIGHT) {
-					if (position_path < (signed)strlen(path)) position_path++;
-				}
-				else if (event.key.keysym.sym == SDLK_RETURN) {
-					done = SDL_TRUE;
-				}
-				else if (event.key.keysym.sym == SDLK_ESCAPE) {
-					done = SDL_TRUE;
-					gorde = -1;
-				}
+				keydown(event, path, &position_path, &gorde, &done);
 				pathMessage = showpath(path, renderer, position_path, pathMessage);
 				break;
 			}
@@ -138,6 +91,58 @@ int exportMap(SDL_Surface* surface, SDL_Renderer* renderer) {
 	return gorde;
 }
 
+void keydown(SDL_Event event, char* path, int *position_path, int* gorde, SDL_bool* done) {
+	char tmp[128];
+
+	switch (event.key.keysym.sym) {
+	case SDLK_c:
+		if (SDL_GetModState() & KMOD_CTRL) {
+			SDL_SetClipboardText(path);
+		}
+		break;
+	case SDLK_v:
+		if (SDL_GetModState() & KMOD_CTRL) {
+			strcpy(tmp, path + *position_path);
+			path[*position_path] = '\0';
+			strcat(path, SDL_GetClipboardText());
+			strcat(path, tmp);
+			*position_path += strlen(SDL_GetClipboardText());
+		}
+		break;
+	case SDLK_BACKSPACE:
+		if (strlen(path) > 0 && *position_path == strlen(path)) {
+			path[strlen(path) - 1] = '\0';
+		}
+		else if (*position_path > 0) {
+			for (int i = *position_path - 1; i < (signed)strlen(path); i++) {
+				path[i] = path[i + 1];
+			}
+		}
+		if (*position_path > 0) (*position_path)--;
+		break;
+	case SDLK_DELETE:
+		if (strlen(path) >= 0 && *position_path < (signed)strlen(path)) {
+			for (int i = *position_path; i <= (signed)strlen(path); i++) {
+				path[i] = path[i + 1];
+			}
+		}
+		break;
+	case SDLK_LEFT:
+		if (*position_path > 0) (*position_path)--;
+		break;
+	case SDLK_RIGHT:
+		if (*position_path < (signed)strlen(path)) (*position_path)++;
+		break;
+	case SDLK_RETURN:
+		*done = SDL_TRUE;
+		break;
+	case SDLK_ESCAPE:
+		*done = SDL_TRUE;
+		*gorde = -1;
+		break;
+	}
+}
+
 void moveright(int start, char* path) {
 	int position = strlen(path);
 
@@ -158,7 +163,6 @@ SDL_Texture* showpath(char* path, SDL_Renderer* renderer, int position_path, SDL
 	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Verdana, tmp, Black);
 	Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
 	SDL_QueryTexture(Message, NULL, NULL, &w, &h);
-	TTF_Init();
 	while (w > WIDTH - 404) {
 		if (position_path > i) {
 			SDL_FreeSurface(surfaceMessage);
@@ -174,7 +178,6 @@ SDL_Texture* showpath(char* path, SDL_Renderer* renderer, int position_path, SDL
 		Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
 		SDL_QueryTexture(Message, NULL, NULL, &w, &h);
 	}
-	TTF_Quit();
 
 	int ptrPos = obtainPtrPosition(renderer, Verdana, position_path, i, path);
 	renderpath(renderer, Message, ptrPos, h, w);
