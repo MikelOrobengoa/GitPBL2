@@ -151,14 +151,14 @@ SDL_Texture* showpath(char* path, SDL_Renderer* renderer, int position_path, SDL
 	char tmp[128];
 	strcpy(tmp, path);
 
-	TTF_Init();
 	TTF_Font* Verdana = TTF_OpenFont("verdana.ttf", 24);
 	SDL_Color Black = { 0, 0, 0, 255 };
 
-	int w, h, i = 0, moved = 0;
+	int w, h, i = 0;
 	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Verdana, tmp, Black);
 	Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
 	SDL_QueryTexture(Message, NULL, NULL, &w, &h);
+	TTF_Init();
 	while (w > WIDTH - 404) {
 		if (position_path > i) {
 			SDL_FreeSurface(surfaceMessage);
@@ -176,31 +176,8 @@ SDL_Texture* showpath(char* path, SDL_Renderer* renderer, int position_path, SDL
 	}
 	TTF_Quit();
 
-	int ptrPos = 202, wTMP;
-	char tmp2[128];
-	strcpy(tmp2, path + i);
-	tmp2[position_path - i] = '\0';
-	if (strlen(tmp2) != 0) {
-		SDL_Surface* surfaceTMP = TTF_RenderText_Solid(Verdana, tmp2, Black);
-		SDL_Texture* MessageTMP = SDL_CreateTextureFromSurface(renderer, surfaceTMP);
-		SDL_QueryTexture(MessageTMP, NULL, NULL, &wTMP, &h);
-		SDL_FreeSurface(surfaceTMP);
-		SDL_DestroyTexture(MessageTMP);
-		ptrPos = wTMP + 201;
-	}
-
-	SDL_Rect Message_rect = { 202, 200, w, h };
-	SDL_Rect rect = { 200, 200, WIDTH - 400, 30 };
-	SDL_Rect rect2 = { 198, 198, WIDTH - 400 + 4, 30 + 4 };
-
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-	SDL_RenderFillRect(renderer, &rect2);
-	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-	SDL_RenderFillRect(renderer, &rect);
-	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-	SDL_RenderDrawLine(renderer, ptrPos, 202, ptrPos, 228);
-	SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
-	SDL_RenderPresent(renderer);
+	int ptrPos = obtainPtrPosition(renderer, Verdana, position_path, i, path);
+	renderpath(renderer, Message, ptrPos, h, w);
 
 	TTF_CloseFont(Verdana);
 	SDL_FreeSurface(surfaceMessage);
@@ -213,6 +190,38 @@ int formatuegokia(char* path) {
 		return 1;
 	}
 	else return 0;
+}
+
+void renderpath (SDL_Renderer* renderer, SDL_Texture* Message, int ptrPos, int h, int w) {
+	SDL_Rect Message_rect = { 202, 200, w, h };
+	SDL_Rect rect = { 200, 200, WIDTH - 400, 30 };
+	SDL_Rect rect2 = { 198, 198, WIDTH - 400 + 4, 30 + 4 };
+
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_RenderFillRect(renderer, &rect2);
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	SDL_RenderFillRect(renderer, &rect);
+	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+	SDL_RenderDrawLine(renderer, ptrPos, 202, ptrPos, 228);
+	SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+	SDL_RenderPresent(renderer);
+}
+
+int obtainPtrPosition(SDL_Renderer* renderer, TTF_Font* Verdana, int position_path, int i, char* path) {
+	int ptrPos = 202, wTMP, h;
+	char tmp2[128];
+	SDL_Color Black = { 0,0,0,255 };
+	strcpy(tmp2, path + i);
+	tmp2[position_path - i] = '\0';
+	if (strlen(tmp2) != 0) {
+		SDL_Surface* surfaceTMP = TTF_RenderText_Solid(Verdana, tmp2, Black);
+		SDL_Texture* MessageTMP = SDL_CreateTextureFromSurface(renderer, surfaceTMP);
+		SDL_QueryTexture(MessageTMP, NULL, NULL, &wTMP, &h);
+		SDL_FreeSurface(surfaceTMP);
+		SDL_DestroyTexture(MessageTMP);
+		ptrPos = wTMP + 201;
+	}
+	return ptrPos;
 }
 
 /*
