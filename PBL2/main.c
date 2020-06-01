@@ -18,9 +18,10 @@ int main(int argc, char* argv[]){
     SDL_Texture* fileTexture = NULL, * menuTexture = NULL;
 
     int running = init(&win, &renderer);
-    static int working = 0;
+    static int working = 0, loadedMap = 0;
     if (running) {
         //Start exec
+        initNodes();
         for (int i = 0; i < 322; i++) *(KEYS + i) = 0;
         if (loadMenu(&menuSurface)) {
             menuTexture = SDL_CreateTextureFromSurface(renderer, menuSurface);
@@ -55,6 +56,10 @@ int main(int argc, char* argv[]){
             if (fileSurface) {
                 SDL_DestroyTexture(fileTexture);
                 fileTexture = SDL_CreateTextureFromSurface(renderer, fileSurface);
+                if (!loadedMap) {
+                    loadMap(fileSurface);
+                    loadedMap = 1;
+                }
             }
             break;
         case CLIENT_EDITOR:
@@ -79,8 +84,8 @@ int main(int argc, char* argv[]){
             if (!working) {
                 initNodes();
                 loadMap(fileSurface);
-                aStar(renderer);
-                printfPath(renderer);
+                if(aStar(renderer))
+                    printfPath(renderer);
                 clientState = CLIENT_EDITOR;
             }
             

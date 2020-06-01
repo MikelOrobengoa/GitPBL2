@@ -20,10 +20,9 @@ Surface batean, lauki bakoitzaren lehen pixeleko kolorea begiratu eta horren ara
 */
 int loadMap(SDL_Surface* surface) {
     int success = 1;
-
 	for (int y = 0; y < Y_TILES; y++) {
 		for (int x = 0; x < X_TILES; x++) {
-            success = checkColor(getPixelColor(surface, x, y), x, y);
+            success = checkColor(surface, getPixelColor(surface, x, y), x, y);
             if (!success) break;
 		}
         if (!success) break;
@@ -34,20 +33,34 @@ int loadMap(SDL_Surface* surface) {
 /*
 Kolorearen arabera (x, y) posizioko nodoari beharrezko ezaugarriak ezarri.
 */
-int checkColor(SDL_Color color, int x, int y) {
+int checkColor(SDL_Surface* surface, SDL_Color color, int x, int y) {
     int success = 1;
 
     nodes[x][y].block = 0;
     nodes[x][y].cost = 0;
+    nodes[x][y].x = x;
+    nodes[x][y].y = y;
     nodes[x][y].id = x + y * Y_TILES;
 
     if (color.r == 0 && color.g == 0 && color.b == 255) {
-        startNode = &nodes[x][y];
-        open[0] = startNode;
-        openKop = 1;
+        if (startNode != &nodes[x][y]) {
+            if (startNode) {
+                SDL_Rect tile = { startNode->x * TILESIZE, startNode->y * TILESIZE, TILESIZE, TILESIZE };
+                SDL_FillRect(surface, &tile, SDL_MapRGB(surface->format, 255, 255, 255));
+            }
+            startNode = &nodes[x][y];
+            open[0] = startNode;
+            openKop = 1;
+        }
     }
     else if (color.r == 0 && color.g == 255 && color.b == 0) {
-        endNode = &nodes[x][y];
+        if (endNode != &nodes[x][y]) {
+            if (endNode) {
+                SDL_Rect tile = { endNode->x * TILESIZE, endNode->y * TILESIZE, TILESIZE, TILESIZE };
+                SDL_FillRect(surface, &tile, SDL_MapRGB(surface->format, 255, 255, 255));
+            }
+            endNode = &nodes[x][y];
+        }
     }
     else if (color.r == 153 && color.g == 153 && color.b == 153) nodes[x][y].cost = 1;
     else if (color.r == 102 && color.g == 102 && color.b == 102) nodes[x][y].cost = 2;
@@ -70,11 +83,11 @@ SDL_Color getPixelColor(SDL_Surface* surface, int x, int y) {
     return color;
 }
 
-void updateMap(SDL_Color color) {
+void updateMap(SDL_Surface* surface, SDL_Color color) {
     int x, y;
     SDL_GetMouseState(&x, &y);
     getTilePos(&x, &y);
-    checkColor(color, x / TILESIZE, y / TILESIZE);
+    checkColor(surface, color, x / TILESIZE, y / TILESIZE);
 }
 
 void initNodes() {
@@ -151,7 +164,14 @@ int aStar(SDL_Renderer* renderer) {
     //}
     //SDL_RenderPresent(renderer);
     
-
+    if (!endNode) {
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Errorea simulazioa kargatzean.\nEz dago bukaerako punturik.", NULL);
+        return 0;
+    }
+    if (!startNode) {
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Errorea simulazioa kargatzean.\nEz dago hasierako punturik.", NULL);
+        return 0;
+    }
     openKop = 1;
     open[0] = startNode;
     closedKop = 0;
@@ -164,7 +184,7 @@ int aStar(SDL_Renderer* renderer) {
             //if (open[i]->f < open[lowestIndex]->f) lowestIndex = i;
         }
         node* current = open[lowestIndex];
-        printf("current: (%d, %d) f:%f, g: %f, h: %f, n:%d\n", current->x, current->y, current->f, current->g, current->h, current->neighboursCount);
+        //printf("current: (%d, %d) f:%f, g: %f, h: %f, n:%d\n", current->x, current->y, current->f, current->g, current->h, current->neighboursCount);
         SDL_Rect r = { current->x * TILESIZE, current->y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
         SDL_SetRenderDrawColor(renderer, 128, 255, 128, 255);
         SDL_RenderFillRect(renderer, &r);
@@ -187,12 +207,13 @@ int aStar(SDL_Renderer* renderer) {
                 continue;
             else {
                 double newNeighbourCost = current->g + calculateHValue(current->x, current->y, neighbour->x, neighbour->y) + neighbour->cost;
-                //double newNeighbourCost = current->g + neighbour->cost + 1;ç
+                //double newNeighbourCost = current->g + neighbour->cost + 1;
                 if(newNeighbourCost < neighbour->g) printf("haha caistes\n");
                 if (newNeighbourCost < neighbour->g ||!containsNode(neighbour, openKop, open)) {
                     neighbour->g = newNeighbourCost;
-                    neighbour->h = calculateHValue(neighbour->x, neighbour->y, endNode->x, endNode->y);
-                    neighbour->f = neighbour->g + neighbour->h;
+                    //neighbour->h = calculateHValue(neighbour->x, neighbour->y, endNode->x, endNode->y);
+                    //neighbour->f = neighbour->g + neighbour->h;
+                    neighbour->f = neighbour->g;
                     neighbour->parent = current;
                     
 
@@ -282,6 +303,6 @@ void printfPath(SDL_Renderer* renderer) {
             }
         }
     SDL_RenderPresent(renderer);
-    Sleep(1000);
+    Sleep(10);
     }
 }

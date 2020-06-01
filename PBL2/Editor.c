@@ -42,7 +42,7 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
     if (y >= MENU_HEIGHT) { //Canvas
         if (MOUSE_CLICK) {
             paintTile(*surface, color);
-            updateMap(color);
+            updateMap(*surface, color);
             changed = 1;
         }
         else {
@@ -211,6 +211,7 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
                     SDL_FreeSurface(*surface);
                     *surface = s;
                     changed = 1;
+                    loadMap(*surface);
                 }
             }
             else if (button == 2) {
@@ -298,6 +299,9 @@ int paintTile(SDL_Surface* surface, SDL_Color color) {
         getTilePos(&posX, &posY);
         SDL_Rect tile = { posX, posY, TILESIZE, TILESIZE };
         SDL_FillRect(surface, &tile, SDL_MapRGB(surface->format, color.r, color.g, color.b));
+        posX /= TILESIZE;
+        posY /= TILESIZE;
+        checkColor(surface, color, posX, posY);
     }
 	return 0;
 }
@@ -403,7 +407,7 @@ void exportMenu(SDL_Renderer* renderer) {
 }
 
 SDL_Texture* paintbackground(SDL_Renderer* renderer) {
-    SDL_Rect background = { 0, 0, 768 + MENU_HEIGHT, 768 };
+    SDL_Rect background = { 0, 0, WIDTH, HEIGHT + MENU_HEIGHT };
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 180);
     SDL_RenderFillRect(renderer, &background);
 

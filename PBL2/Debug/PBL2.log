@@ -1,2 +1,3 @@
-﻿  LINK : D:\Docs\Uni\2\PBL2\PBL2\Debug\PBL2.exe not found or not built by the last incremental link; performing full link
+﻿  PathFinding.c
+D:\Docs\Uni\2\PBL2\PBL2\PBL2\PathFinding.c(80,1): warning C4133: 'initializing': incompatible types - from 'Uint8 *' to 'Uint32 *'
   PBL2.vcxproj -> D:\Docs\Uni\2\PBL2\PBL2\Debug\PBL2.exe

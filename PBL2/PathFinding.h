@@ -67,9 +67,9 @@ int importMap(SDL_Surface** surface);
 
 //Pathfinding
 int loadMap(SDL_Surface* surface);
-int checkColor(SDL_Color color, int x, int y);
+int checkColor(SDL_Surface* surface, SDL_Color color, int x, int y);
 SDL_Color getPixelColor(SDL_Surface* surface, int x, int y);
-void updateMap(SDL_Color color);
+void updateMap(SDL_Surface* surface, SDL_Color color);
 void initNodes();
 double calculateHValue(int ogX, int ogY, int destX, int destY);
 int containsNode(node* element, int kop, node** list);
