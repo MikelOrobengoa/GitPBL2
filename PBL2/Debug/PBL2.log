@@ -1,25 +1,2 @@
-﻿  Editor.c
-C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\Editor.c(253,68): warning C4047: 'función': 'Uint32' es distinto en los niveles de direccionamiento indirecto de 'void *'
-C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\Editor.c(253,68): warning C4024: 'SDL_CreateRGBSurface': tipos distintos para el parámetro formal y el parámetro real 5
-C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\Editor.c(253,74): warning C4047: 'función': 'Uint32' es distinto en los niveles de direccionamiento indirecto de 'void *'
-C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\Editor.c(253,74): warning C4024: 'SDL_CreateRGBSurface': tipos distintos para el parámetro formal y el parámetro real 6
-C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\Editor.c(253,80): warning C4047: 'función': 'Uint32' es distinto en los niveles de direccionamiento indirecto de 'void *'
-C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\Editor.c(253,80): warning C4024: 'SDL_CreateRGBSurface': tipos distintos para el parámetro formal y el parámetro real 7
-C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\Editor.c(253,86): warning C4047: 'función': 'Uint32' es distinto en los niveles de direccionamiento indirecto de 'void *'
-C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\Editor.c(253,86): warning C4024: 'SDL_CreateRGBSurface': tipos distintos para el parámetro formal y el parámetro real 8
-  EventHandler.c
-  FileManager.c
-  MenuManager.c
-C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\MenuManager.c(46,71): warning C4047: 'función': 'Uint32' es distinto en los niveles de direccionamiento indirecto de 'void *'
-C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\MenuManager.c(46,71): warning C4024: 'SDL_CreateRGBSurface': tipos distintos para el parámetro formal y el parámetro real 5
-C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\MenuManager.c(46,77): warning C4047: 'función': 'Uint32' es distinto en los niveles de direccionamiento indirecto de 'void *'
-C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\MenuManager.c(46,77): warning C4024: 'SDL_CreateRGBSurface': tipos distintos para el parámetro formal y el parámetro real 6
-C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\MenuManager.c(46,83): warning C4047: 'función': 'Uint32' es distinto en los niveles de direccionamiento indirecto de 'void *'
-C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\MenuManager.c(46,83): warning C4024: 'SDL_CreateRGBSurface': tipos distintos para el parámetro formal y el parámetro real 7
-C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\MenuManager.c(46,89): warning C4047: 'función': 'Uint32' es distinto en los niveles de direccionamiento indirecto de 'void *'
-C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\MenuManager.c(46,89): warning C4024: 'SDL_CreateRGBSurface': tipos distintos para el parámetro formal y el parámetro real 8
-  PathFinding.c
-C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\PathFinding.c(80,1): warning C4133: 'inicializando': tipos incompatibles, de 'Uint8 *' a 'Uint32 *'
-  main.c
-  Generando código...
+﻿  FileManager.c
   PBL2.vcxproj -> C:\Users\sanzd\Documents\GitHub\GitPBL2\Debug\PBL2.exe

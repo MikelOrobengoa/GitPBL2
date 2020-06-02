@@ -316,8 +316,8 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
                 *clientState = CLIENT_SIM;
             }
             else if (button == 10) {
-                printf("HAHA NO HELP LUL\n");
-            }
+                if (!helpmenu(renderer)) changed = 2;
+                }
             if (button != -1) {
                 SDL_RenderCopy(renderer, menuBarTexture, NULL, &menuBar);
                 switch (costColor) {
@@ -337,8 +337,8 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
                     SDL_RenderCopy(renderer, c4, NULL, &btn_cost);
                     break;
                 }
+                button = -1;
             }
-            button = -1;
         }
     }
 
@@ -464,52 +464,6 @@ void loadTexture(SDL_Texture** Tex, SDL_Renderer* renderer, char* path) {
     }
 }
 
-void exportMenu(SDL_Renderer* renderer) {
-    SDL_Texture* pathTitle;
-    pathTitle = paintbackground(renderer);
-    SDL_DestroyTexture(pathTitle);
-
-    SDL_Surface* surf_save = NULL;
-    SDL_Surface* surf_exit = NULL;
-    loadIMG(&surf_save, "images/save.png");
-    loadIMG(&surf_exit, "images/exit.png");
-
-    if (surf_save && surf_exit) {
-        SDL_Texture* Save = SDL_CreateTextureFromSurface(renderer, surf_save);
-        SDL_Texture* Exit = SDL_CreateTextureFromSurface(renderer, surf_exit);
-        SDL_FreeSurface(surf_save);
-        SDL_FreeSurface(surf_exit);
-        SDL_Rect Save_rect = { WIDTH / 2 - 96 / 2, 270, 96, 26 };
-        SDL_Rect Exit_rect = { WIDTH / 2 - 96 / 2, 307, 96, 26 };
-
-        SDL_RenderCopy(renderer, Save, NULL, &Save_rect);
-        SDL_RenderCopy(renderer, Exit, NULL, &Exit_rect);
-        SDL_RenderPresent(renderer);
-    }
-}
-
-SDL_Texture* paintbackground(SDL_Renderer* renderer) {
-    SDL_Rect background = { 0, 0, WIDTH, HEIGHT + MENU_HEIGHT };
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 180);
-    SDL_RenderFillRect(renderer, &background);
-
-    TTF_Init();
-    TTF_Font* Verdana = TTF_OpenFont("verdanab.ttf", 24);
-    SDL_Color White = { 255, 255, 255, 255 };
-    int w, h;
-    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Verdana, "Sartu direktorioa eta izena:", White);
-    SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
-    SDL_QueryTexture(Message, NULL, NULL, &w, &h);
-    SDL_Rect Message_rect = { 202, 180 - h, w, h };
-    SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
-    SDL_RenderPresent(renderer);
-    TTF_Quit();
-
-    SDL_FreeSurface(surfaceMessage);
-    TTF_CloseFont(Verdana);
-    return Message;
-}
-
 void loadCost(SDL_Renderer* renderer, SDL_Texture** c0, SDL_Texture** c0_click, SDL_Texture** c1, SDL_Texture** c1_click, SDL_Texture** c2, SDL_Texture** c2_click, SDL_Texture** c3, SDL_Texture** c3_click, SDL_Texture** c4, SDL_Texture** c4_click) {
     loadTexture(c0, renderer, "images/cost0.png");
     loadTexture(c1, renderer, "images/cost1.png");
@@ -521,4 +475,41 @@ void loadCost(SDL_Renderer* renderer, SDL_Texture** c0, SDL_Texture** c0_click, 
     loadTexture(c2_click, renderer, "images/cost2_click.png");
     loadTexture(c3_click, renderer, "images/cost3_click.png");
     loadTexture(c4_click, renderer, "images/cost4_click.png");
+}
+
+int helpmenu(SDL_Renderer* renderer) {
+    static SDL_Texture* help = NULL;
+    if (!help) loadTexture(&help, renderer, "images/help.png");
+    SDL_Rect rect = { 0, 0, WIDTH, HEIGHT }, btn_help = { 734, 3, 28, 26 };
+    int done = -1, click = 0;
+
+    SDL_RenderCopy(renderer, help, NULL, &rect);
+    SDL_RenderPresent(renderer);
+
+    while (done == -1) {
+        SDL_Event e;
+        if (SDL_PollEvent(&e)) {
+            switch (e.type) {
+            case SDL_QUIT:
+                done = 0;
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                if (checkButton(btn_help)) {
+                    click = 1;
+                }
+                break;
+            case SDL_MOUSEBUTTONUP:
+                if (click == 1) {
+                    done = 1;
+                }
+                break;
+            case SDL_KEYDOWN:
+                if (e.key.keysym.sym == SDLK_ESCAPE) {
+                    done = 1;
+                }
+                break;
+            }
+        }
+    }
+    return done;
 }

@@ -64,6 +64,7 @@ void moveright(int start, char* path);
 SDL_Texture* showpath(char* path, SDL_Renderer* renderer, int position_path, SDL_Texture* Message);
 int obtainPtrPosition(SDL_Renderer* renderer, TTF_Font* Verdana, int position_path, int i, char* path);
 void renderpath(SDL_Renderer* renderer, SDL_Texture* Message, int ptrPos, int h, int w);
+void exportMenu(SDL_Renderer* renderer);
 SDL_Texture* paintbackground(SDL_Renderer* renderer);
 void loadTexture(SDL_Texture** Tex, SDL_Renderer* renderer, char* path);
 int formatuegokia(char* path);
@@ -94,9 +95,8 @@ int renderTilePreview(SDL_Renderer* renderer);
 int loadEditorMenu(SDL_Surface** surface);
 void renderEditor(SDL_Renderer* renderer, SDL_Texture* fileTexture);
 int loadIMG(SDL_Surface** surface, char* image_path);
-void exportMenu(SDL_Renderer* renderer);
 void loadCost(SDL_Renderer* renderer, SDL_Texture** c0, SDL_Texture** c0_click, SDL_Texture** c1, SDL_Texture** c1_click, SDL_Texture** c2, SDL_Texture** c2_click, SDL_Texture** c3, SDL_Texture** c3_click, SDL_Texture** c4, SDL_Texture** c4_click);
-
+int helpmenu(SDL_Renderer* renderer);
 
 
 
