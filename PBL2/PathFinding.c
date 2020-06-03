@@ -145,25 +145,7 @@ double calculateHValue(int ogX, int ogY, int destX, int destY) {
     //    + ((double) ogY - destY) * ((double) ogY - destY)));
 }
 
-int aStar(SDL_Renderer* renderer) {
-    //for (int i = 0; i < 24; i++) {
-    //    for (int j = 0; j < 24; j++) {
-    //        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    //        SDL_RenderClear(renderer, NULL);
-    //        SDL_Rect r = { nodes[i][j].x * TILESIZE,  nodes[i][j].y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
-    //        SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
-    //        SDL_RenderFillRect(renderer, &r);
-    //        for (int n = 0; n < nodes[i][j].neighboursCount; n++) {
-    //            SDL_Rect r = { nodes[i][j].neighbours[n]->x * TILESIZE, nodes[i][j].neighbours[n]->y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
-    //            SDL_SetRenderDrawColor(renderer, 196, 64, 64, 255);
-    //            SDL_RenderFillRect(renderer, &r);
-    //            SDL_RenderPresent(renderer);
-    //        }
-    //            Sleep(1000);
-    //    }
-    //}
-    //SDL_RenderPresent(renderer);
-    
+int aStar(SDL_Renderer* renderer) {    
     if (!endNode) {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Errorea simulazioa kargatzean.\nEz dago bukaerako punturik.", NULL);
         return 0;
@@ -188,6 +170,9 @@ int aStar(SDL_Renderer* renderer) {
         SDL_Rect r = { current->x * TILESIZE, current->y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
         SDL_SetRenderDrawColor(renderer, 128, 255, 128, 255);
         SDL_RenderFillRect(renderer, &r);
+        if (current->x == 6 && current->y == 1) {
+            printf(".");
+        }
         closed[closedKop] = current;
         closedKop++;
         removeNode(current, &openKop, open);
@@ -201,6 +186,7 @@ int aStar(SDL_Renderer* renderer) {
             return 1;
         }
 
+
         for (int i = 0; i < current->neighboursCount; i++) {
             node* neighbour = current->neighbours[i];
             if (neighbour->block || containsNode(neighbour, closedKop, closed))
@@ -211,9 +197,9 @@ int aStar(SDL_Renderer* renderer) {
                 if(newNeighbourCost < neighbour->g) printf("haha caistes\n");
                 if (newNeighbourCost < neighbour->g ||!containsNode(neighbour, openKop, open)) {
                     neighbour->g = newNeighbourCost;
-                    //neighbour->h = calculateHValue(neighbour->x, neighbour->y, endNode->x, endNode->y);
-                    //neighbour->f = neighbour->g + neighbour->h;
-                    neighbour->f = neighbour->g;
+                    neighbour->h = calculateHValue(neighbour->x, neighbour->y, endNode->x, endNode->y);
+                    neighbour->f = neighbour->g + neighbour->h;
+                    //neighbour->f = neighbour->g;
                     neighbour->parent = current;
                     
 
@@ -225,7 +211,7 @@ int aStar(SDL_Renderer* renderer) {
             }
         }
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        SDL_RenderClear(renderer);
+        //SDL_RenderClear(renderer);
         for (int i = 0; i < openKop; i++) {
             SDL_Rect r = { open[i]->x * TILESIZE, open[i]->y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
             SDL_SetRenderDrawColor(renderer, 128, 255, 128, 255);
@@ -282,15 +268,6 @@ void retracePath(node* start, node* end) {
 }
 
 void printfPath(SDL_Renderer* renderer) {
-    //for (int i = 0; i < pathKop; i++) {
-    //    SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
-    //    SDL_Rect r = { path[i]->x * TILESIZE, path[i]->y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
-    //    SDL_RenderFillRect(renderer, &r);
-    //    printf("%d, (%d, %d) g: %f, h: %f f: %f\n", i, path[i]->x, path[i]->y, path[i]->g, path[i]->h, path[i]->f);
-
-    //    SDL_RenderPresent(renderer);
-    //    
-    //}
     SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
     for (int i = 0; i < pathKop - 1; i++) {
         for (int j = -1; j < 2; j++) {
@@ -302,7 +279,10 @@ void printfPath(SDL_Renderer* renderer) {
                     path[i + 1]->y * TILESIZE + TILESIZE + k + TILESIZE / 2);
             }
         }
-    SDL_RenderPresent(renderer);
-    Sleep(10);
     }
+}
+
+node** getCurrentPath(int* kop) {
+    *kop = pathKop;
+    return path;
 }

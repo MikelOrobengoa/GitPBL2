@@ -147,6 +147,7 @@
     <ClCompile Include="main.c" />
     <ClCompile Include="MenuManager.c" />
     <ClCompile Include="PathFinding.c" />
+    <ClCompile Include="RobotSim.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PathFinding.h" />

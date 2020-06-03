@@ -79,6 +79,15 @@ int aStar(SDL_Renderer* renderer);
 void removeNode(node* element, int* kop, node** list);
 void retracePath(node* start, node* end);
 void printfPath(SDL_Renderer* renderer);
+
+//BotSim
+int robotSim(SDL_Renderer* renderer);
+int moveBot(float* x, float* y, int* xDir, int* yDir, node next, double delta);
+void drawBot(SDL_Renderer* renderer, SDL_Texture* tex, int x, int y, int xDir, int yDir);
+node** getCurrentPath(int* kop);
+
+
+
 //Events
 void eventHandler(SDL_Event e);
 

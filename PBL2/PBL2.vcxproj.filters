@@ -33,6 +33,9 @@
     <ClCompile Include="MenuManager.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RobotSim.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PathFinding.h">

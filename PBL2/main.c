@@ -78,17 +78,23 @@ int main(int argc, char* argv[]){
                 }
             }
             renderEditor(renderer, fileTexture);
-            if (KEYS[SDLK_s]) clientState = CLIENT_SIM;
             break;
         case CLIENT_SIM:
             if (!working) {
                 initNodes();
                 loadMap(fileSurface);
-                if(aStar(renderer))
-                    printfPath(renderer);
+                if (!aStar(renderer))
+                    working = 0;
+                else working = 1;
+            }
+            SDL_Rect rect = { 0, MENU_HEIGHT, WIDTH, HEIGHT };
+            SDL_RenderCopy(renderer, fileTexture, NULL, &rect);
+            if (working) printfPath(renderer);
+            if (!robotSim(renderer)) {
+                working = 0;
                 clientState = CLIENT_EDITOR;
             }
-            
+            break;
         }
         SDL_RenderPresent(renderer);
     }
