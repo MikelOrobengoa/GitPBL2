@@ -68,7 +68,8 @@ void exportMenu(SDL_Renderer* renderer);
 SDL_Texture* paintbackground(SDL_Renderer* renderer);
 void loadTexture(SDL_Texture** Tex, SDL_Renderer* renderer, char* path);
 int formatuegokia(char* path);
-int importMap(SDL_Surface** surface);
+int importMap(SDL_Surface** surface, SDL_Renderer* renderer);
+int importMap_menu(SDL_Surface** surface, SDL_Renderer* renderer);
 
 
 //Pathfinding

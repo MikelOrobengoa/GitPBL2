@@ -261,7 +261,7 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
             }
             else if (button == 1) {
                 SDL_Surface* s = NULL;
-                importMap(&s);
+                if (importMap(&s, renderer) == -1) changed = 2;
                 if (!s) printf("Errorea fitxategia inportatzean.\n");
                 else {
                     SDL_FreeSurface(*surface);
@@ -317,7 +317,7 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
             }
             else if (button == 10) {
                 if (!helpmenu(renderer)) changed = 2;
-                }
+            }
             if (button != -1) {
                 SDL_RenderCopy(renderer, menuBarTexture, NULL, &menuBar);
                 switch (costColor) {

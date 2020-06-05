@@ -284,31 +284,109 @@ Irudi bat inportatzeko pantailara arrastratuaz.
 [1] Ebentoak begiratu ESC tekla sakatuaz irten edo fitxategia arrastratu arte.
 [2] Fitxategiaren helbidea lortutakoan surface batera bihurtu eta beharrezko memoriak askatu.
 */
-int importMap(SDL_Surface** surface) {
+int importMap(SDL_Surface** surface, SDL_Renderer* renderer) {
+	static SDL_Texture* importTex = NULL;
+	if (!importTex) loadTexture(&importTex, renderer, "images/import_editor.png");
+	SDL_Rect btn = { 0, 0, WIDTH, HEIGHT + MENU_HEIGHT };
+	SDL_Rect btn_imp = { 106, 3, 96, 26 };
+	SDL_RenderCopy(renderer, importTex, NULL, &btn);
+	SDL_RenderPresent(renderer);
     char fileDir[256];
-    int loaded = 0;
+	int loaded = 0, click = 0;
     SDL_Event e;
     SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
     while (!loaded)
         while (SDL_PollEvent(&e)) {
             eventHandler(e);
-            if (KEYS[SDLK_ESCAPE] || e.type == SDL_QUIT) return 0;
-            else if (e.type == SDL_DROPFILE) {
-                strcpy(fileDir, e.drop.file);
-                printf("File dropped on window: %s", fileDir);
-                SDL_RWops* fp = SDL_RWFromFile(fileDir, "rb");
-                if (fp) {
-                    SDL_Surface* s = IMG_LoadPNG_RW(fp);
-                    if (s) {
-                        SDL_Surface* lol = *surface;
-                        if (*surface) SDL_FreeSurface(lol);
-                        *surface = s;
-                        loaded = 1;
-                    }
-                    SDL_RWclose(fp);
-                }
-                break;
-            }
+			switch (e.type) {
+			case SDL_KEYDOWN:
+				if (e.key.keysym.sym == SDLK_ESCAPE) {
+					return 0;
+				}
+			case SDL_QUIT:
+				return -1;
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+				if (checkButton(btn_imp)) {
+					click = 1;
+				}
+				break;
+			case SDL_MOUSEBUTTONUP:
+				if (click == 1) {
+					return 0;
+				}
+				break;
+			case SDL_DROPFILE:
+				strcpy(fileDir, e.drop.file);
+				printf("File dropped on window: %s", fileDir);
+				SDL_RWops* fp = SDL_RWFromFile(fileDir, "rb");
+				if (fp) {
+					SDL_Surface* s = IMG_LoadPNG_RW(fp);
+					if (s) {
+						SDL_Surface* lol = *surface;
+						if (*surface) SDL_FreeSurface(lol);
+						*surface = s;
+						loaded = 1;
+					}
+					SDL_RWclose(fp);
+				}
+				break;
+			}
+
+        }
+    return loaded;
+}
+
+int importMap_menu(SDL_Surface** surface, SDL_Renderer* renderer) {
+	static SDL_Texture* importTex = NULL;
+	if (!importTex) loadTexture(&importTex, renderer, "images/import_menu.png");
+	SDL_Rect btn = { (WIDTH - 741)/2, 340, 741, 425 };
+	SDL_Rect btn_back = { 0,0,WIDTH,HEIGHT + MENU_HEIGHT };
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
+	SDL_RenderFillRect(renderer, &btn_back);
+	SDL_RenderCopy(renderer, importTex, NULL, &btn);
+	SDL_RenderPresent(renderer);
+    char fileDir[256];
+	int loaded = 0, click = 0;
+    SDL_Event e;
+    SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
+    while (!loaded)
+        while (SDL_PollEvent(&e)) {
+            eventHandler(e);
+			switch (e.type) {
+			case SDL_KEYDOWN:
+				if (e.key.keysym.sym == SDLK_ESCAPE) {
+					return 0;
+				}
+			case SDL_QUIT:
+				return -1;
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+				if (!checkButton(btn)) {
+					click = 1;
+				}
+				break;
+			case SDL_MOUSEBUTTONUP:
+				if (click == 1) {
+					return 0;
+				}
+				break;
+			case SDL_DROPFILE:
+				strcpy(fileDir, e.drop.file);
+				printf("File dropped on window: %s", fileDir);
+				SDL_RWops* fp = SDL_RWFromFile(fileDir, "rb");
+				if (fp) {
+					SDL_Surface* s = IMG_LoadPNG_RW(fp);
+					if (s) {
+						SDL_Surface* lol = *surface;
+						if (*surface) SDL_FreeSurface(lol);
+						*surface = s;
+						loaded = 1;
+					}
+					SDL_RWclose(fp);
+				}
+				break;
+			}
 
         }
     return loaded;
