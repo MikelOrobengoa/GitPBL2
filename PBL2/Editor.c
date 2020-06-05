@@ -1,4 +1,6 @@
-#include "PathFinding.h"
+#include "General.h"
+#include "Editor.h"
+#include "FileManager.h"
 
 /*
 Editorean hautatutako kolorea

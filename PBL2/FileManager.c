@@ -1,4 +1,6 @@
-#include "PathFinding.h"
+#include "General.h"
+#include "FileManager.h"
+#include "Editor.h"
 
 /*
 Surface bat PNG irudi bezala exportatzeko.

@@ -150,6 +150,10 @@
     <ClCompile Include="RobotSim.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Editor.h" />
+    <ClInclude Include="FileManager.h" />
+    <ClInclude Include="General.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="PathFinding.h" />
     <ClInclude Include="resource1.h" />
   </ItemGroup>

@@ -1,4 +1,6 @@
-#include "PathFinding.h"
+#include "General.h"
+#include "Menu.h"
+#include "FileManager.h"
 
 /*
 Hasierako menuaren funtzio nagusia. Botoiak sakatzen diren begiratu. Sakatzean funtzio desberdinei deitu.

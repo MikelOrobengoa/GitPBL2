@@ -1,1 +1,15 @@
-﻿  PBL2.vcxproj -> C:\Users\sanzd\Documents\GitHub\GitPBL2\Debug\PBL2.exe
+﻿  RobotSim.c
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(24,15): warning C4013: 'loadIMG' sin definir; se supone que extern devuelve como resultado int
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(42,38): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(43,49): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(64,33): warning C4244: 'función': conversión de 'float' a 'int'; posible pérdida de datos
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(64,36): warning C4244: 'función': conversión de 'float' a 'int'; posible pérdida de datos
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(77,22): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(78,53): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(82,22): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(83,53): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(88,22): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(89,75): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(93,22): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(94,75): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+  PBL2.vcxproj -> C:\Users\sanzd\Documents\GitHub\GitPBL2\Debug\PBL2.exe
