@@ -1,6 +1,5 @@
 #include "PathFinding.h"
 #include <math.h>
-#include <windows.h>
 
 /*
 Algoritmoak erabiliko dituen nodoen (laukien) zerrenda edo matrizeak.
@@ -10,6 +9,12 @@ node* open[X_TILES * Y_TILES];
 node* closed[X_TILES * Y_TILES];
 node* path[100];
 int openKop, closedKop = 0, pathKop = 0;
+
+//VERI TENPORARI
+enum ALGS {DIJSKTRA, ASTAR};
+int diags, algoritmo;
+
+
 /*
 Bidearen hasiera eta bukaerako nodoak zerrendako zein posiziotan dauden.
 */
@@ -157,13 +162,11 @@ int aStar(SDL_Renderer* renderer) {
     openKop = 1;
     open[0] = startNode;
     closedKop = 0;
-    while (openKop > 0) {
-        Sleep(10);
-        
+    while (openKop > 0) {        
         int lowestIndex = 0;
 
         for (int i = 0; i < openKop; i++) {
-            //if (open[i]->f < open[lowestIndex]->f) lowestIndex = i;
+            if (open[i]->f < open[lowestIndex]->f) lowestIndex = i;
         }
         node* current = open[lowestIndex];
         //printf("current: (%d, %d) f:%f, g: %f, h: %f, n:%d\n", current->x, current->y, current->f, current->g, current->h, current->neighboursCount);
@@ -181,7 +184,6 @@ int aStar(SDL_Renderer* renderer) {
             //for (int i = 0; i < openKop; i++) printf("%d, %d, %d", open[i]->x, open[i]->y, open[i]->id);
             openKop = 0;
             closedKop = 0;
-            printf("creo que ya he terminado");
             retracePath(startNode, endNode);
             return 1;
         }
@@ -192,9 +194,8 @@ int aStar(SDL_Renderer* renderer) {
             if (neighbour->block || containsNode(neighbour, closedKop, closed))
                 continue;
             else {
-                double newNeighbourCost = current->g + calculateHValue(current->x, current->y, neighbour->x, neighbour->y) + neighbour->cost;
-                //double newNeighbourCost = current->g + neighbour->cost + 1;
-                if(newNeighbourCost < neighbour->g) printf("haha caistes\n");
+                //double newNeighbourCost = current->g + calculateHValue(current->x, current->y, neighbour->x, neighbour->y) + neighbour->cost;
+                double newNeighbourCost = current->g + neighbour->cost + calculateHValue(current->x, current->y, neighbour->x, neighbour->y);
                 if (newNeighbourCost < neighbour->g ||!containsNode(neighbour, openKop, open)) {
                     neighbour->g = newNeighbourCost;
                     neighbour->h = calculateHValue(neighbour->x, neighbour->y, endNode->x, endNode->y);
@@ -211,7 +212,6 @@ int aStar(SDL_Renderer* renderer) {
             }
         }
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        //SDL_RenderClear(renderer);
         for (int i = 0; i < openKop; i++) {
             SDL_Rect r = { open[i]->x * TILESIZE, open[i]->y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
             SDL_SetRenderDrawColor(renderer, 128, 255, 128, 255);
@@ -232,7 +232,8 @@ int aStar(SDL_Renderer* renderer) {
         }
         SDL_RenderPresent(renderer);
     }
-    printf("Path foundn't\n");
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, "EZINEZKOA", "Ez dago bide posiblerik.", NULL);
+    MOUSE_CLICK = 0;
     return 0;
 }
 
@@ -247,8 +248,8 @@ int containsNode(node* element, int kop, node** list) {
 
 void removeNode(node* element, int* kop, node** list) {
     int i = 0;
-    while (i < *kop && element->id == list[i]->id) i++;
-    for (i = i - 1; i < *kop; i++) {
+    while (i < *kop && element->id != list[i]->id) i++;
+    for (i; i < *kop - 1; i++) {
         list[i] = list[i + 1];
     }
     *kop -= 1;

@@ -9,7 +9,6 @@ int robotSim(SDL_Renderer* renderer) {
 
 	if (startTime == 0) startTime = clock();
 	if (endTime == 0) {
-		printf("PLOK");
 		endTime = clock();
 	}
 	else {
@@ -17,7 +16,6 @@ int robotSim(SDL_Renderer* renderer) {
 	}
 	double delta = ((double)endTime - startTime) / CLOCKS_PER_SEC;
 	startTime = endTime;
-	printf("delta: %f\n", delta);
 
 	static SDL_Texture* botTexture;
 	if (!botTexture) {
@@ -31,10 +29,6 @@ int robotSim(SDL_Renderer* renderer) {
 
 	static int pathKop, stage;
 	static node** path;
-	if (!path) {
-		path = getCurrentPath(&pathKop);
-		if (!path) return;
-	}
 
 	static int currentNode;
 	static float x, y;
@@ -42,31 +36,30 @@ int robotSim(SDL_Renderer* renderer) {
 
 	switch (stage) {
 	case 0:
+		path = getCurrentPath(&pathKop);
+		currentNode = pathKop - 1;
 		x = path[currentNode]->x * TILESIZE;
 		y = path[currentNode]->y * TILESIZE + TILESIZE;
-		currentNode++;
+		currentNode--;
 		stage = 1;
 		break;
 	case 1:
 		if(moveBot(&x, &y, &xDir, &yDir, *path[currentNode], delta))
-			currentNode++;
-		if (currentNode == pathKop) {
-			stage = 2;
 			currentNode--;
+		if (currentNode < 0) {
+			stage = 2;
+			currentNode++;
 		}
 		break;
 	case 2:
 		if(moveBot(&x, &y, &xDir, &yDir, *path[currentNode], delta))
-			currentNode--;
-		if (currentNode < 0) {
+			currentNode++;
+		if (currentNode == pathKop) {
 			stage = 0;
-			currentNode = 0;
 		}
 		break;
 	}
 	
-	printf("EL CURRENTE ES: %d \n", currentNode);
-	//printf("LA POSISIO: %.2f, %.2f \n", x, y);
 	drawBot(renderer, botTexture, x, y, xDir, yDir);
 
 	if (stage == 0) {
@@ -116,8 +109,6 @@ void drawBot(SDL_Renderer* renderer, SDL_Texture* tex, int x, int y, int xDir, i
 	else if (xDir == 1 && yDir == -1) angle = -90;
 	else if (xDir == -1 && yDir == 1) angle = 0;
 	
-	//SDL_RenderCopy(renderer, tex, NULL, &r);
-	//printf("angulua %f", angle);
 	int flip = SDL_FLIP_NONE;
 	if (xDir == -1) flip = SDL_FLIP_HORIZONTAL;
 	SDL_RenderCopyEx(renderer,

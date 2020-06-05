@@ -480,7 +480,7 @@ void loadCost(SDL_Renderer* renderer, SDL_Texture** c0, SDL_Texture** c0_click, 
 int helpmenu(SDL_Renderer* renderer) {
     static SDL_Texture* help = NULL;
     if (!help) loadTexture(&help, renderer, "images/help.png");
-    SDL_Rect rect = { 0, 0, WIDTH, HEIGHT }, btn_help = { 734, 3, 28, 26 };
+    SDL_Rect rect = { 0, 0, WIDTH, HEIGHT + MENU_HEIGHT }, btn_help = { 734, 3, 28, 26 };
     int done = -1, click = 0;
 
     SDL_RenderCopy(renderer, help, NULL, &rect);

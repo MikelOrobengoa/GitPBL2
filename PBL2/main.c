@@ -89,11 +89,14 @@ int main(int argc, char* argv[]){
             }
             SDL_Rect rect = { 0, MENU_HEIGHT, WIDTH, HEIGHT };
             SDL_RenderCopy(renderer, fileTexture, NULL, &rect);
-            if (working) printfPath(renderer);
-            if (!robotSim(renderer)) {
-                working = 0;
-                clientState = CLIENT_EDITOR;
+            if (working) {
+                printfPath(renderer);
+                if (!robotSim(renderer)) {
+                    working = 0;
+                    clientState = CLIENT_EDITOR;
+                }
             }
+            else clientState = CLIENT_EDITOR;
             break;
         }
         SDL_RenderPresent(renderer);

@@ -191,7 +191,7 @@ SDL_Texture* paintbackground(SDL_Renderer* renderer) {
 	SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
 	SDL_QueryTexture(Message, NULL, NULL, &w, &h);
 	SDL_Rect Message_rect = { WIDTH / 2 - w / 2, 257 - h + 50, w, h };
-	SDL_Rect back_rect = { 0, 0, WIDTH, HEIGHT };
+	SDL_Rect back_rect = { 0, 0, WIDTH, HEIGHT + MENU_HEIGHT };
 	SDL_RenderCopy(renderer, back, NULL, &back_rect);
 	SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
