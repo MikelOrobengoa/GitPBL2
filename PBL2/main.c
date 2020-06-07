@@ -1,4 +1,7 @@
+#include "General.h"
+#include "Menu.h"
 #include "PathFinding.h"
+#include "Editor.h"
 /*
 Programa zein ataletan dagoen zehazteko. Honen arabera funtzionalitatea eta pantailaratzen dena aldatu.
 */

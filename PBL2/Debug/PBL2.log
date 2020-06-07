@@ -1,16 +1,15 @@
 ﻿  RobotSim.c
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\RobotSim.c(36,20): warning C4033: 'robotSim' must return a value
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\RobotSim.c(45,38): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\RobotSim.c(46,49): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\RobotSim.c(70,33): warning C4244: 'function': conversion from 'float' to 'int', possible loss of data
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\RobotSim.c(70,36): warning C4244: 'function': conversion from 'float' to 'int', possible loss of data
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\RobotSim.c(83,22): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\RobotSim.c(84,53): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\RobotSim.c(88,22): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\RobotSim.c(89,53): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\RobotSim.c(94,22): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\RobotSim.c(95,75): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\RobotSim.c(99,22): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\RobotSim.c(100,75): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-D:\Docs\Uni\2\PBL2\PBL2\PBL2\RobotSim.c(77): warning C4715: 'robotSim': not all control paths return a value
-  PBL2.vcxproj -> D:\Docs\Uni\2\PBL2\PBL2\Debug\PBL2.exe
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(24,15): warning C4013: 'loadIMG' sin definir; se supone que extern devuelve como resultado int
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(42,38): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(43,49): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(64,33): warning C4244: 'función': conversión de 'float' a 'int'; posible pérdida de datos
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(64,36): warning C4244: 'función': conversión de 'float' a 'int'; posible pérdida de datos
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(77,22): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(78,53): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(82,22): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(83,53): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(88,22): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(89,75): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(93,22): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\sanzd\Documents\GitHub\GitPBL2\PBL2\RobotSim.c(94,75): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+  PBL2.vcxproj -> C:\Users\sanzd\Documents\GitHub\GitPBL2\Debug\PBL2.exe

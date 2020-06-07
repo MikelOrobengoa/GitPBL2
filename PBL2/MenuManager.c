@@ -1,4 +1,6 @@
-#include "PathFinding.h"
+#include "General.h"
+#include "Menu.h"
+#include "FileManager.h"
 
 /*
 Hasierako menuaren funtzio nagusia. Botoiak sakatzen diren begiratu. Sakatzean funtzio desberdinei deitu.
@@ -38,8 +40,12 @@ int mainMenu(SDL_Renderer* renderer, SDL_Surface** surface, int* clientState) {
             running = 0;
         }
         else if (button == 1 && checkButton(btn_import)) {
-            if (importMap(surface)) {
+            switch (importMap_menu(surface, renderer)) {
+            case 1:
                 *clientState = CLIENT_EDITOR;
+                break;
+            case -1:
+                running = 0;
             }
         }
         else if (button == 2 && checkButton(btn_newFile)) {
