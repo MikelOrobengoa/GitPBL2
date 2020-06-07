@@ -21,7 +21,7 @@ int main(int argc, char* argv[]){
     SDL_Texture* fileTexture = NULL, * menuTexture = NULL;
 
     int running = init(&win, &renderer);
-    int sim_diags = 1, sim_alg = 0;
+    int sim_diags = 1, sim_alg = 1;
     int working = 0, loadedMap = 0;
     if (running) {
         //Start exec
