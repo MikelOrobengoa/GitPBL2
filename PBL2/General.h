@@ -38,6 +38,9 @@ enum CLIENT_STATE { CLIENT_MAIN_MENU, CLIENT_EDITOR, CLIENT_SIM };
 
 extern int KEYS[322];
 extern int MOUSE_CLICK;
+extern int sim_diags, sim_alg;
+
+enum button {new, import, export, Red, Green, Blue, Minus, Cost, Plus, alg, diag, Play, Help};
 
 //Events
 void eventHandler(SDL_Event e);
