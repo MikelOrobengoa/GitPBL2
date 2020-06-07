@@ -305,7 +305,7 @@ int editor(SDL_Surface** surface, SDL_Renderer* renderer, int* clientState) {
             SDL_Surface* s = NULL;
             switch (button) {
             case new:
-                s = SDL_CreateRGBSurface(0, WIDTH, HEIGHT, 32, NULL, NULL, NULL, NULL);
+                s = SDL_CreateRGBSurface(0, WIDTH, HEIGHT, 32, 0, 0, 0, 0);
                 if (!s) printf("Errorea fitxategi berria sortzean.\n");
                 else {
                     SDL_FillRect(s, NULL, SDL_MapRGB((s)->format, 255, 255, 255));

@@ -1,5 +1,6 @@
 #include "General.h"
 #include "PathFinding.h"
+#include "Editor.h"
 #include <math.h>
 
 /*
