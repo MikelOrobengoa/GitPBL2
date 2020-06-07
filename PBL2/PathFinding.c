@@ -1,6 +1,5 @@
 #include "General.h"
 #include "PathFinding.h"
-#include "Editor.h"
 #include <math.h>
 
 /*
@@ -84,7 +83,7 @@ Surface baten (x, y) posiziodun pixelaren RGB kolorea atera.
 */
 SDL_Color getPixelColor(SDL_Surface* surface, int x, int y) {
     int bpp = surface->format->BytesPerPixel;
-    Uint32* pixel = (Uint32*)surface->pixels + y * 32 * surface->pitch + x * 32 * bpp;
+    Uint32* pixel = (Uint8*)surface->pixels + y * 32 * surface->pitch + x * 32 * bpp;
     SDL_Color color;
     SDL_GetRGB(*pixel, surface->format, &color.r, &color.g, &color.b);
     return color;

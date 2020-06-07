@@ -1,7 +1,6 @@
 #include "General.h"
 #include "Menu.h"
 #include "FileManager.h"
-#include "Editor.h"
 
 /*
 Hasierako menuaren funtzio nagusia. Botoiak sakatzen diren begiratu. Sakatzean funtzio desberdinei deitu.
@@ -50,7 +49,7 @@ int mainMenu(SDL_Renderer* renderer, SDL_Surface** surface, int* clientState) {
             }
         }
         else if (button == 2 && checkButton(btn_newFile)) {
-            *surface = SDL_CreateRGBSurface(0, WIDTH, HEIGHT, 32, 0, 0, 0, 0);
+            *surface = SDL_CreateRGBSurface(0, WIDTH, HEIGHT, 32, NULL, NULL, NULL, NULL);
             if (!*surface) return 0;
             SDL_FillRect(*surface, NULL, SDL_MapRGB((*surface)->format, 255, 255, 255));
             *clientState = CLIENT_EDITOR;
