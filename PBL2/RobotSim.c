@@ -1,5 +1,6 @@
 #include "General.h"
 #include "PathFinding.h"
+#include "Editor.h"
 #include <math.h>
 #include <time.h>
 
@@ -39,8 +40,8 @@ int robotSim(SDL_Renderer* renderer) {
 	case 0:
 		path = getCurrentPath(&pathKop);
 		currentNode = pathKop - 1;
-		x = path[currentNode]->x * TILESIZE;
-		y = path[currentNode]->y * TILESIZE + TILESIZE;
+		x = (float)path[currentNode]->x * TILESIZE;
+		y = (float)path[currentNode]->y * TILESIZE + TILESIZE;
 		currentNode--;
 		stage = 1;
 		break;
@@ -61,7 +62,7 @@ int robotSim(SDL_Renderer* renderer) {
 		break;
 	}
 	
-	drawBot(renderer, botTexture, x, y, xDir, yDir);
+	drawBot(renderer, botTexture, (int)x, (int)y, xDir, yDir);
 
 	if (stage == 0) {
 		SDL_DestroyTexture(botTexture);
@@ -74,25 +75,25 @@ int moveBot(float* x, float* y, int* xDir, int* yDir, node next, double delta) {
 	int speed = 100, reached = 0;
 	if (*x < next.x * TILESIZE) {
 		*xDir = 1;
-		*x += speed * delta;
-		if (*x > next.x * TILESIZE) *x = next.x * TILESIZE;
+		*x += speed * (float)delta;
+		if (*x > next.x * TILESIZE) *x = (float)next.x * TILESIZE;
 	}
 	else if (*x > next.x * TILESIZE) {
 		*xDir = -1;
-		*x -= speed * delta;
-		if (*x < next.x * TILESIZE) *x = next.x * TILESIZE;
+		*x -= speed * (float)delta;
+		if (*x < next.x * TILESIZE) *x = (float)next.x * TILESIZE;
 	}
 	else *xDir = 0;
 
 	if (*y < next.y * TILESIZE + TILESIZE) {
 		*yDir = 1;
-		*y += speed * delta;
-		if (*y > next.y * TILESIZE + TILESIZE) *y = next.y * TILESIZE + TILESIZE;
+		*y += speed * (float)delta;
+		if (*y > next.y * TILESIZE + TILESIZE) *y = (float)next.y * TILESIZE + TILESIZE;
 	}
 	else if (*y > next.y * TILESIZE + TILESIZE) {
 		*yDir = -1;
-		*y -= speed * delta;
-		if (*y < next.y * TILESIZE + TILESIZE) *y = next.y * TILESIZE + TILESIZE;
+		*y -= speed * (float)delta;
+		if (*y < next.y * TILESIZE + TILESIZE) *y = (float)next.y * TILESIZE + TILESIZE;
 	}
 	else *yDir = 0;
 
