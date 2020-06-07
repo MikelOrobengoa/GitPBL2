@@ -81,6 +81,7 @@ int moveBot(float* x, float* y, int* xDir, int* yDir, node next, double delta) {
 		*x -= speed * delta;
 		if (*x < next.x * TILESIZE) *x = next.x * TILESIZE;
 	}
+	else *xDir = 0;
 
 	if (*y < next.y * TILESIZE + TILESIZE) {
 		*yDir = 1;
@@ -92,6 +93,7 @@ int moveBot(float* x, float* y, int* xDir, int* yDir, node next, double delta) {
 		*y -= speed * delta;
 		if (*y < next.y * TILESIZE + TILESIZE) *y = next.y * TILESIZE + TILESIZE;
 	}
+	else *yDir = 0;
 
 	if (*x == next.x * TILESIZE && *y == next.y * TILESIZE + TILESIZE) reached = 1;
 	return reached;
@@ -100,14 +102,14 @@ int moveBot(float* x, float* y, int* xDir, int* yDir, node next, double delta) {
 void drawBot(SDL_Renderer* renderer, SDL_Texture* tex, int x, int y, int xDir, int yDir) {
 	SDL_Rect r = { x, y, TILESIZE, TILESIZE };
 	double angle = 0;
-	if (xDir == 1 && yDir == 1) angle = 0;
-	else if (xDir == 1 && yDir == 0) angle = -45;
-	else if (xDir == 0 && yDir == 1) angle = 45;
-	else if (xDir == 0 && yDir == -1) angle = -135;
-	else if (xDir == -1 && yDir == 0) angle = 45;
-	else if (xDir == -1 && yDir == -1) angle = 90;
-	else if (xDir == 1 && yDir == -1) angle = -90;
-	else if (xDir == -1 && yDir == 1) angle = 0;
+	if (xDir == 1 && yDir == 1) angle = -45;
+	else if (xDir == 1 && yDir == 0) angle = -90;
+	else if (xDir == 0 && yDir == 1) angle = 0;
+	else if (xDir == 0 && yDir == -1) angle = 180;
+	else if (xDir == -1 && yDir == 0) angle = 90;
+	else if (xDir == -1 && yDir == -1) angle = 135;
+	else if (xDir == 1 && yDir == -1) angle = -135;
+	else if (xDir == -1 && yDir == 1) angle = 45;
 	
 	int flip = SDL_FLIP_NONE;
 	if (xDir == -1) flip = SDL_FLIP_HORIZONTAL;

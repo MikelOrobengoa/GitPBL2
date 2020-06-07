@@ -95,14 +95,16 @@ void updateMap(SDL_Surface* surface, SDL_Color color) {
     checkColor(surface, color, x / TILESIZE, y / TILESIZE);
 }
 
-void initNodes() {
+void initNodes(int diags) {
+    endNode = NULL;
+    startNode = NULL;
     for (int j = 0; j < Y_TILES; j++) {
         for (int i = 0; i < X_TILES; i++) {
             nodes[i][j].x = i;
             nodes[i][j].y = j;
             nodes[i][j].neighboursCount = 0;
             
-            if (i - 1 >= 0 && j - 1 >= 0) {
+            if (diags && i - 1 >= 0 && j - 1 >= 0) {
                 nodes[i][j].neighbours[nodes[i][j].neighboursCount] = &nodes[i - 1][j - 1];
                     nodes[i][j].neighboursCount++;
             }
@@ -110,7 +112,7 @@ void initNodes() {
                 nodes[i][j].neighbours[nodes[i][j].neighboursCount] = &nodes[i][j - 1];
                     nodes[i][j].neighboursCount++;
             }
-            if (i + 1 < X_TILES && j - 1 >= 0) {
+            if (diags && i + 1 < X_TILES && j - 1 >= 0) {
                 nodes[i][j].neighbours[nodes[i][j].neighboursCount] = &nodes[i +1 ][j - 1];
                     nodes[i][j].neighboursCount++;
             }
@@ -122,7 +124,7 @@ void initNodes() {
                 nodes[i][j].neighbours[nodes[i][j].neighboursCount] = &nodes[i + 1][j];
                 nodes[i][j].neighboursCount++;
             }
-            if (i - 1 >= 0 && j + 1 < Y_TILES) {
+            if (diags && i - 1 >= 0 && j + 1 < Y_TILES) {
                 nodes[i][j].neighbours[nodes[i][j].neighboursCount] = &nodes[i - 1][j + 1];
                 nodes[i][j].neighboursCount++;
             }
@@ -130,7 +132,7 @@ void initNodes() {
                 nodes[i][j].neighbours[nodes[i][j].neighboursCount] = &nodes[i][j + 1];
                 nodes[i][j].neighboursCount++;
             }
-            if (i + 1 < X_TILES && j + 1 < Y_TILES) {
+            if (diags && i + 1 < X_TILES && j + 1 < Y_TILES) {
                 nodes[i][j].neighbours[nodes[i][j].neighboursCount] = &nodes[i + 1][j + 1];
                 nodes[i][j].neighboursCount++;
             }
@@ -138,19 +140,18 @@ void initNodes() {
     }
 }
 
-double calculateHValue(int ogX, int ogY, int destX, int destY) {
-    return sqrt(((double)ogX - destX) * ((double)ogX - destX) + ((double)ogY - destY) * ((double)ogY - destY));
-    //double d1, d2;
-    //d1 = abs(ogX - destX);
-    //d2 = abs(ogY - destY);
-    //if (d1 > d2) return d1;
-    //else return d2;
-
-    //return ((double) sqrt(((double) ogX - destX) * ((double) ogX - destX)
-    //    + ((double) ogY - destY) * ((double) ogY - destY)));
+double calculateHValue(int ogX, int ogY, int destX, int destY, int diags) {
+    if(diags) return sqrt(((double)ogX - destX) * ((double)ogX - destX) + ((double)ogY - destY) * ((double)ogY - destY));
+    else {
+        double d1, d2;
+        d1 = abs(ogX - destX);
+        d2 = abs(ogY - destY);
+        if (d1 > d2) return d1;
+        return d2;
+    }
 }
 
-int aStar(SDL_Renderer* renderer) {    
+int findPath(SDL_Renderer* renderer, int alg, int diags) {    
     if (!endNode) {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Errorea simulazioa kargatzean.\nEz dago bukaerako punturik.", NULL);
         return 0;
@@ -169,7 +170,7 @@ int aStar(SDL_Renderer* renderer) {
             if (open[i]->f < open[lowestIndex]->f) lowestIndex = i;
         }
         node* current = open[lowestIndex];
-        //printf("current: (%d, %d) f:%f, g: %f, h: %f, n:%d\n", current->x, current->y, current->f, current->g, current->h, current->neighboursCount);
+
         SDL_Rect r = { current->x * TILESIZE, current->y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
         SDL_SetRenderDrawColor(renderer, 128, 255, 128, 255);
         SDL_RenderFillRect(renderer, &r);
@@ -188,21 +189,21 @@ int aStar(SDL_Renderer* renderer) {
             return 1;
         }
 
-
         for (int i = 0; i < current->neighboursCount; i++) {
             node* neighbour = current->neighbours[i];
             if (neighbour->block || containsNode(neighbour, closedKop, closed))
                 continue;
             else {
                 //double newNeighbourCost = current->g + calculateHValue(current->x, current->y, neighbour->x, neighbour->y) + neighbour->cost;
-                double newNeighbourCost = current->g + neighbour->cost + calculateHValue(current->x, current->y, neighbour->x, neighbour->y);
+                double newNeighbourCost = current->g + neighbour->cost + calculateHValue(current->x, current->y, neighbour->x, neighbour->y, diags);
                 if (newNeighbourCost < neighbour->g ||!containsNode(neighbour, openKop, open)) {
                     neighbour->g = newNeighbourCost;
-                    neighbour->h = calculateHValue(neighbour->x, neighbour->y, endNode->x, endNode->y);
-                    neighbour->f = neighbour->g + neighbour->h;
-                    //neighbour->f = neighbour->g;
+                    if (alg == 1) {
+                        neighbour->h = calculateHValue(neighbour->x, neighbour->y, endNode->x, endNode->y, diags);
+                        neighbour->f = neighbour->g + neighbour->h;
+                    }
+                    else neighbour->f = neighbour->g;
                     neighbour->parent = current;
-                    
 
                     if (!containsNode(neighbour, openKop, open)) {
                         open[openKop] = neighbour;

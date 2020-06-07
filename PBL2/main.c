@@ -18,10 +18,11 @@ int main(int argc, char* argv[]){
     SDL_Texture* fileTexture = NULL, * menuTexture = NULL;
 
     int running = init(&win, &renderer);
-    static int working = 0, loadedMap = 0;
+    int sim_diags = 1, sim_alg = 0;
+    int working = 0, loadedMap = 0;
     if (running) {
         //Start exec
-        initNodes();
+        initNodes(sim_diags);
         for (int i = 0; i < 322; i++) *(KEYS + i) = 0;
         if (loadMenu(&menuSurface)) {
             menuTexture = SDL_CreateTextureFromSurface(renderer, menuSurface);
@@ -81,9 +82,9 @@ int main(int argc, char* argv[]){
             break;
         case CLIENT_SIM:
             if (!working) {
-                initNodes();
+                initNodes(sim_diags);
                 loadMap(fileSurface);
-                if (!aStar(renderer))
+                if (!findPath(renderer, sim_alg, sim_diags))
                     working = 0;
                 else working = 1;
             }
