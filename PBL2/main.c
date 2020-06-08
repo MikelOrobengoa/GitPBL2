@@ -6,6 +6,8 @@
 Programa zein ataletan dagoen zehazteko. Honen arabera funtzionalitatea eta pantailaratzen dena aldatu.
 */
 int clientState = CLIENT_MAIN_MENU;
+int sim_diags = 1;
+int sim_alg = 1;
 
 /*
 Programaren funtzio nagusia. 
@@ -21,7 +23,6 @@ int main(int argc, char* argv[]){
     SDL_Texture* fileTexture = NULL, * menuTexture = NULL;
 
     int running = init(&win, &renderer);
-    int sim_diags = 1, sim_alg = 1;
     int working = 0, loadedMap = 0;
     if (running) {
         //Start exec
