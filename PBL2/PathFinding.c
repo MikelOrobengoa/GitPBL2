@@ -13,7 +13,7 @@ node** path;
 int openKop, closedKop = 0, pathKop = 0;
 
 /*
-Bidearen hasiera eta bukaerako nodoak zerrendako zein posiziotan dauden.
+Bidearen hasiera eta bukaerako nodoen punteroak.
 */
 node* startNode = NULL, * endNode = NULL;
 
