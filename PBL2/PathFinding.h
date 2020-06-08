@@ -31,6 +31,7 @@ int findPath(SDL_Renderer* renderer, int alg, int diags);
 void removeNode(node* element, int* kop, node** list);
 void retracePath(node* start, node* end);
 void printfPath(SDL_Renderer* renderer);
+int memoriaKudeatu(node** ptr, int kop);
 
 //Simulation
 int robotSim(SDL_Renderer* renderer);

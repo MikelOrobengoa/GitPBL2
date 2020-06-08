@@ -112,13 +112,11 @@ void drawBot(SDL_Renderer* renderer, SDL_Texture* tex, int x, int y, int xDir, i
 	else if (xDir == 1 && yDir == -1) angle = -135;
 	else if (xDir == -1 && yDir == 1) angle = 45;
 	
-	int flip = SDL_FLIP_NONE;
-	if (xDir == -1) flip = SDL_FLIP_HORIZONTAL;
 	SDL_RenderCopyEx(renderer,
 		tex,
 		NULL,
 		&r,
 		angle,
 		NULL,
-		flip);
+		SDL_FLIP_NONE);
 }

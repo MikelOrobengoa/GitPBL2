@@ -6,15 +6,10 @@
 Algoritmoak erabiliko dituen nodoen (laukien) zerrenda edo matrizeak.
 */
 node nodes[X_TILES][Y_TILES];
-node* open[X_TILES * Y_TILES];
-node* closed[X_TILES * Y_TILES];
-node* path[100];
+node** open;
+node** closed;
+node** path;
 int openKop, closedKop = 0, pathKop = 0;
-
-//VERI TENPORARI
-enum ALGS {DIJSKTRA, ASTAR};
-int diags, algoritmo;
-
 
 /*
 Bidearen hasiera eta bukaerako nodoak zerrendako zein posiziotan dauden.
@@ -55,8 +50,9 @@ int checkColor(SDL_Surface* surface, SDL_Color color, int x, int y) {
                 SDL_FillRect(surface, &tile, SDL_MapRGB(surface->format, 255, 255, 255));
             }
             startNode = &nodes[x][y];
-            open[0] = startNode;
             openKop = 1;
+            if (!memoriaKudeatu(&open, openKop)) printf("Errorea open malloc\n");
+            open[0] = startNode;
         }
     }
     else if (color.r == 0 && color.g == 255 && color.b == 0) {
@@ -152,7 +148,7 @@ double calculateHValue(int ogX, int ogY, int destX, int destY, int diags) {
     }
 }
 
-int findPath(SDL_Renderer* renderer, int alg, int diags) {    
+int findPath(SDL_Renderer* renderer, int alg, int diags) { 
     if (!endNode) {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Errorea simulazioa kargatzean.\nEz dago bukaerako punturik.", NULL);
         return 0;
@@ -162,9 +158,11 @@ int findPath(SDL_Renderer* renderer, int alg, int diags) {
         return 0;
     }
     openKop = 1;
+    if (!memoriaKudeatu(&open, openKop)) printf("Errorea open malloc\n");
     open[0] = startNode;
+
     closedKop = 0;
-    while (openKop > 0) {        
+    while (openKop > 0) {
         int lowestIndex = 0;
 
         for (int i = 0; i < openKop; i++) {
@@ -175,17 +173,20 @@ int findPath(SDL_Renderer* renderer, int alg, int diags) {
         SDL_Rect r = { current->x * TILESIZE, current->y * TILESIZE + TILESIZE, TILESIZE, TILESIZE };
         SDL_SetRenderDrawColor(renderer, 128, 255, 128, 255);
         SDL_RenderFillRect(renderer, &r);
-        if (current->x == 6 && current->y == 1) {
-            printf(".");
-        }
+
+        if (!memoriaKudeatu(&closed, closedKop + 1)) printf("Errorea closed malloc\n");
         closed[closedKop] = current;
         closedKop++;
         removeNode(current, &openKop, open);
+        if (!memoriaKudeatu(&open, openKop)) printf("Errorea open malloc\n");
 
         if (current->id == endNode->id) {
-            //for (int i = 0; i < openKop; i++) printf("%d, %d, %d", open[i]->x, open[i]->y, open[i]->id);
             openKop = 0;
             closedKop = 0;
+            free(open);
+            open = NULL;
+            free(closed);
+            closed = NULL;
             retracePath(startNode, endNode);
             return 1;
         }
@@ -195,7 +196,6 @@ int findPath(SDL_Renderer* renderer, int alg, int diags) {
             if (neighbour->block || containsNode(neighbour, closedKop, closed))
                 continue;
             else {
-                //double newNeighbourCost = current->g + calculateHValue(current->x, current->y, neighbour->x, neighbour->y) + neighbour->cost;
                 double newNeighbourCost = current->g + neighbour->cost + calculateHValue(current->x, current->y, neighbour->x, neighbour->y, diags);
                 if (newNeighbourCost < neighbour->g ||!containsNode(neighbour, openKop, open)) {
                     neighbour->g = newNeighbourCost;
@@ -207,6 +207,7 @@ int findPath(SDL_Renderer* renderer, int alg, int diags) {
                     neighbour->parent = current;
 
                     if (!containsNode(neighbour, openKop, open)) {
+                        if (!memoriaKudeatu(&open, openKop + 1)) printf("Errorea open malloc\n");
                         open[openKop] = neighbour;
                         openKop++;
                     }
@@ -261,6 +262,7 @@ void retracePath(node* start, node* end) {
     int i = 0;
     node* current = end;
     while (current->id != start->id) {
+        if (!memoriaKudeatu(&path, i + 1)) printf("Errorea path malloc\n");
         *(path + i) = current;
         i++;
         current = current->parent;
@@ -288,4 +290,27 @@ void printfPath(SDL_Renderer* renderer) {
 node** getCurrentPath(int* kop) {
     *kop = pathKop;
     return path;
+}
+
+int memoriaKudeatu(node*** ptr, int kop) {
+    int success = 0;
+    node** ptrTmp = *ptr, ** ptrTmp2 = NULL;
+    if (*ptr == NULL) {
+        *ptr = (node**)malloc(sizeof(node*) * kop);
+        success = 1;
+    }
+    else {
+        if (kop == 0) {
+            free(*ptr);
+            *ptr = NULL;
+        }
+        else {
+            ptrTmp2 = (node**)realloc(ptrTmp, sizeof(node*) * kop);
+            if (ptrTmp2) {
+                *ptr = ptrTmp2;
+                success = 1;
+            }
+        }
+    }
+    return success;
 }
